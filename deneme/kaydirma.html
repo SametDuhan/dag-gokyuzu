@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAG Gökyüzü · kaydırmalı giriş (prototip)</title>
+<meta name="theme-color" content="#02040a">
+<link rel="icon" href="data:,">
+<!-- PROTOTİP: sayfalari-uret.mjs dışında, elle yazıldı. Kareler: node araclar/kareleri-cikar.mjs video1.mp4 ... -->
+<link rel="stylesheet" href="../css/yazi-tipleri.css">
+<link rel="stylesheet" href="../css/stil.css">
+<link rel="stylesheet" href="kaydirma.css">
+<script type="importmap">{ "imports": { "satellite.js": "../vendor/satellite.js/index.js" } }</script>
+</head>
+<body class="sayfa-kaydirma">
+<a class="atla" href="#sonra">Girişi atla</a>
+
+<section class="kaydir" id="kaydir" aria-label="Giriş: Karakayatepe'de gündüzden geceye">
+  <div class="kaydir-sahne">
+    <canvas id="kareTuval" aria-hidden="true"></canvas>
+    <canvas id="izTuval" aria-hidden="true"></canvas>
+    <div class="kaydir-perde" aria-hidden="true"></div>
+    <div class="kaydir-cubuk" aria-hidden="true"><span id="ilerleme"></span></div>
+    <p class="kaydir-yukleme" id="yukleme" aria-hidden="true"></p>
+  </div>
+
+  <div class="kaydir-yazilar">
+    <article class="sahne-yazi orta" data-bas="0" data-bit="0.13">
+      <h1>Karakayatepe, 3170 metre</h1>
+      <p>Doğu Anadolu Gözlemevi: Türkiye'nin en büyük teleskobunun gökyüzü. Aşağı kaydır.</p>
+    </article>
+    <article class="sahne-yazi sol" data-bas="0.17" data-bit="0.34">
+      <h2>Gün batıyor</h2>
+      <p>Gözlem gecesi güneş ufkun 18° altına inince başlar: astronomik alacakaranlık.</p>
+    </article>
+    <article class="sahne-yazi sag" data-bas="0.4" data-bit="0.57">
+      <h2>Kubbe açılıyor</h2>
+      <p>Bulut, nem ve rüzgâr uygunsa. Hangi gecelerin uygun olduğunu 2015'ten bugüne saatlik verilerle inceledik.</p>
+    </article>
+    <article class="sahne-yazi sol" data-bas="0.6" data-bit="0.72">
+      <h2>Gece çöküyor</h2>
+      <p>Ay ufkun altındaysa en sönük cisimler de görünür.</p>
+      <dl class="canli-veri" id="geceVeri" aria-live="polite">
+        <div><dt>Bu gece karanlık</dt><dd id="vKaranlik">hesaplanıyor…</dd></div>
+        <div><dt>Ay</dt><dd id="vAy">…</dd><dd class="ince" id="vAyAd"></dd></div>
+        <div><dt>Ay’sız karanlık</dt><dd id="vAysiz">…</dd></div>
+      </dl>
+      <p class="veri-not" id="geceNot">DAG koordinatları için şu an hesaplandı.</p>
+    </article>
+    <article class="sahne-yazi sag" data-bas="0.75" data-bit="0.87">
+      <h2 id="izBaslik">Bu gece geçecek</h2>
+      <p id="izMetin" aria-live="polite">Uydu geçişleri hesaplanıyor…</p>
+      <p class="veri-not" id="izNot"></p>
+    </article>
+    <article class="sahne-yazi orta" data-bas="0.9" data-bit="1.01">
+      <h2>Bu gece gökyüzü nasıl?</h2>
+      <p><a class="dugme" href="../gece.html">Bu geceye bak</a></p>
+    </article>
+  </div>
+</section>
+
+<main id="sonra" class="kaydir-sonra">
+  <p class="slogan">Sitenin geri kalanı burada başlar.</p>
+  <p class="lead">Prototip: görüntüler yer tutucudur, Higgsfield videoları gelince yalnızca kareler değişecek.</p>
+  <p><a href="../">Ana sayfaya dön</a></p>
+</main>
+
+<script type="module" src="kaydirma.js"></script>
+</body>
+</html>

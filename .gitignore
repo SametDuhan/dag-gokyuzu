@@ -1,1 +1,6 @@
 node_modules/
+
+# kaydırmalı giriş: kaynak videolar ve yer tutucu kareler depoya girmez (büyük, yeniden üretilebilir):
+#   node deneme/yer-tutucu-uret.mjs && node araclar/kareleri-cikar.mjs deneme/kaynak/yer-tutucu.mp4
+deneme/kaynak/
+deneme/kareler/

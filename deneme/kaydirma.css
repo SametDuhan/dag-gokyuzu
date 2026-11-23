@@ -1,0 +1,47 @@
+/* Kaydırmalı giriş (prototip). Varsayılan düzen JS'siz/hareketsiz: yazılar alt alta, her birinin üstünde bir kare.
+   JS ve hareket izni varsa <html class="canli">: sahne yapışkan olur, kareler kaydırmayla oynar. */
+.sayfa-kaydirma { background: var(--zemin); }
+
+.kaydir-sahne { display: none; }
+.kaydir-yazilar { max-width: 46rem; margin: 0 auto; padding: 3rem var(--bosluk); display: grid; gap: 3rem; }
+.sahne-yazi img { width: 100%; height: auto; border-radius: 10px; display: block; margin-bottom: 1rem; }
+.sahne-yazi h1, .sahne-yazi h2 { font: 700 clamp(2rem, 1.2rem + 3.5vw, 4rem)/1.02 var(--baslik); letter-spacing: -0.02em; margin: 0 0 0.6rem; text-wrap: balance; }
+.sahne-yazi h1 { font-size: clamp(2.6rem, 1.4rem + 5vw, 5.6rem); }
+.sahne-yazi p { margin: 0 0 0.8rem; color: var(--yazi-2); font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem); text-wrap: pretty; max-width: 32rem; }
+/* canlı veri: bu gece karanlık / Ay */
+.canli-veri { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0.4rem 1.6rem; margin: 1rem 0 0.6rem; }
+.canli-veri div { border-top: 1px solid var(--altin); padding-top: 0.45rem; }
+.canli-veri dt { font: 600 0.72rem/1.2 var(--govde); letter-spacing: 0.08em; text-transform: uppercase; color: var(--yazi-2); }
+.canli-veri dd { margin: 0.2rem 0 0; font: 500 1.05rem/1.3 var(--olcu); color: var(--yazi); white-space: nowrap; }
+.canli-veri dd.ince { margin: 0; font: 400 0.85rem/1.3 var(--govde); color: var(--yazi-2); }
+.sahne-yazi .veri-not { font-size: 0.82rem; color: var(--yazi-3); }
+.canli .sahne-yazi .veri-not { color: var(--yazi-2); }
+@media (max-width: 40rem) { .canli-veri { grid-template-columns: 1fr 1fr; } }
+
+.kaydir-sonra { padding: clamp(4rem, 12vh, 8rem) var(--bosluk); text-align: center; }
+
+/* --- canlı mod --- */
+.canli .kaydir { position: relative; height: 850vh; }
+.canli .kaydir-sahne { display: block; position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.canli #kareTuval, .canli #izTuval { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.canli #izTuval { opacity: 0; }
+/* yazıların okunması için hafif kenar karartması */
+.canli .kaydir-perde { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 45%, rgba(2, 4, 10, 0.55) 100%); pointer-events: none; }
+.canli .kaydir-cubuk { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(150, 175, 230, 0.12); }
+.canli .kaydir-cubuk span { display: block; height: 100%; width: 100%; background: var(--altin); transform-origin: left; transform: scaleX(0); }
+.canli .kaydir-yukleme { position: absolute; right: var(--bosluk); bottom: 1rem; margin: 0; font: 500 0.75rem/1 var(--olcu); color: var(--yazi-3); transition: opacity 0.6s; }
+
+.canli .kaydir-yazilar { position: absolute; inset: 0; max-width: none; padding: 0; display: block; pointer-events: none; }
+.canli .sahne-yazi { position: fixed; top: 50%; left: var(--bosluk); right: var(--bosluk); transform: translateY(-50%); opacity: 0; visibility: hidden; text-shadow: 0 2px 24px rgba(2, 4, 10, 0.85), 0 1px 3px rgba(2, 4, 10, 0.9); }
+.canli .sahne-yazi.gorunur { visibility: visible; pointer-events: auto; }
+.canli .sahne-yazi p { color: var(--yazi); }
+.canli .sahne-yazi.orta { text-align: center; }
+.canli .sahne-yazi.orta :is(h1, h2, p) { margin-inline: auto; }
+.canli .sahne-yazi.sol { max-width: 34rem; }
+.canli .sahne-yazi.sag { left: auto; max-width: 34rem; }
+.canli .sahne-yazi img { display: none; }
+
+@media (max-width: 40rem) {
+  .canli .sahne-yazi { top: auto; bottom: 12svh; transform: none; }
+  .canli .sahne-yazi.sag { left: var(--bosluk); }
+}

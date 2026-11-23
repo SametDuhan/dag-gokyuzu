@@ -14,9 +14,9 @@ function ayristir(metin) {
 
 const TAZE_SAAT = 36; // depodaki dosya GitHub Actions ile her gün yenilenir; bundan eskiyse canlı veri denenir
 
-async function depodanYukle() {
+async function depodanYukle(kok) {
   const al = (yol) => fetch(yol, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); });
-  const [metin, tarih] = await Promise.all([al('data/tle-gorunur.txt'), al('data/tle-gorunur.tarih')]);
+  const [metin, tarih] = await Promise.all([al(kok + 'data/tle-gorunur.txt'), al(kok + 'data/tle-gorunur.tarih')]);
   return { sats: ayristir(metin), tarih: new Date(tarih.trim()) };
 }
 
@@ -30,10 +30,11 @@ async function canliYukle() {
 
 // Önce depodaki günlük CelesTrak kopyası (her ziyaretçi CelesTrak'e istek atmasın diye);
 // dosya bayatsa canlı CelesTrak; o da olmazsa bayat kopya, açıkça "eski" diye etiketlenir.
+// kok: sitenin köküne göreli yol (alt klasördeki sayfalar için, örn. '../').
 // Dönüş: { sats, tur: 'depo' | 'canli' | 'eski', tarih? }
-export async function tleYukle() {
+export async function tleYukle(kok = '') {
   let depo = null;
-  try { depo = await depodanYukle(); } catch { /* canlıyı dene */ }
+  try { depo = await depodanYukle(kok); } catch { /* canlıyı dene */ }
   const yasSaat = depo ? (Date.now() - depo.tarih) / 3600e3 : Infinity;
   if (depo && yasSaat <= TAZE_SAAT && depo.sats.length > 20) return { sats: depo.sats, tur: 'depo', tarih: depo.tarih };
   try { return { sats: await canliYukle(), tur: 'canli' }; } catch { /* bayat kopyaya düş */ }
