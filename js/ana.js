@@ -1,7 +1,9 @@
 // Her sayfa bu betiği yükler; yalnız o sayfada bulunan öğeler için çalışır.
 import { t, dilKur, ilkDil, getDil } from './i18n.js';
 import { yildizlariBaslat } from './yildiz.js';
-import { tleYukle, gecisleriHesapla } from './gecisler.js';
+import { tleYukle, gecisleriHesapla, gozlemci } from './gecisler.js';
+import { geceOzeti } from '../src/gece.js';
+import { ozetYaz, ayKartCiz, cizelgeCiz, olaylarCiz } from './ay-gorsel.js';
 import { gokyuzuKur } from './gokyuzu.js';
 import { havaYukle, saatleriHazirla, seritCiz, esikleriCiz } from './hava.js';
 import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu } from './iklim-gorsel.js';
@@ -64,6 +66,19 @@ function kaynakYazi() {
   el.textContent = t('harita.' + tur, { n: durum.sats.length, tarih: zaman });
 }
 
+// ---- Ay ve karanlık (bu gece sayfası) ----
+let geceOz = null;
+function geceCiz() {
+  if (!$('#ayKart')) return;
+  geceOz ??= geceOzeti(new Date(), gozlemci);
+  ozetYaz($('#geceOzet'), geceOz); ayKartCiz($('#ayKart'), geceOz); cizelgeCiz($('#geceCizelge'), geceOz); olaylarCiz($('#olayListe'), geceOz);
+}
+
+if ($('#geceCizelge')) {
+  let sonGenislik = 0;
+  new ResizeObserver(([g]) => { const w = Math.round(g.contentRect.width); if (geceOz && Math.abs(w - sonGenislik) > 8) { sonGenislik = w; cizelgeCiz($('#geceCizelge'), geceOz); } }).observe($('#geceCizelge'));
+}
+
 // ---- hava (bu gece sayfası) ----
 function havaCiz() {
   const kap = $('#havaSerit'), oz = $('#havaOzet'); if (!kap) return;
@@ -71,7 +86,8 @@ function havaCiz() {
   if (!durum.hava) return;
   if (durum.hava === 'yok') { kap.replaceChildren(); oz.textContent = t('hava.yuk'); return; }
   const saatler = saatleriHazirla(durum.hava); seritCiz(kap, saatler);
-  const n = saatler.filter((s) => s.uygun).length; oz.textContent = n ? t('hava.ozet', { n }) : t('hava.ozetSifir');
+  const uygun = saatler.filter((s) => s.uygun), n = uygun.length, m = uygun.filter((s) => s.ayUstte).length;
+  oz.textContent = !n ? t('hava.ozetSifir') : m ? t('hava.ozetAy', { n, m }) : t('hava.ozet', { n });
 }
 
 // ---- iklim sayfası ----
@@ -82,7 +98,7 @@ function iklimCiz() {
   isiCiz($('#isi'), v); olcekCiz($('#olcek')); karsilastirmaCiz($('#karsilastirma'), v);
 }
 
-document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); havaCiz(); iklimCiz(); });
+document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); havaCiz(); iklimCiz(); });
 dilKur(ilkDil());
 
 // ---- veri akışı: yalnız ilgili sayfada ----

@@ -95,13 +95,24 @@ sayfa({ dosya: 'gokyuzu.html', baslik: 'Gökyüzü · DAG Gökyüzü', aciklama:
     </div>
   </section>` });
 
-sayfa({ dosya: 'gece.html', baslik: 'Bu gece · DAG Gökyüzü', aciklama: 'DAG için önümüzdeki 24 saatin gözlem koşulları.', aktif: 'gece', govde: `
+sayfa({ dosya: 'gece.html', baslik: 'Bu gece · DAG Gökyüzü', aciklama: 'DAG için bu gecenin karanlık saatleri, Ay evresi ve önümüzdeki 24 saatin gözlem koşulları.', aktif: 'gece', govde: `
   <section class="bolum ilk" aria-labelledby="geceBaslik">
-    <h1 id="geceBaslik" class="sayfa-baslik" data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h1>
+    <h1 id="geceBaslik" class="sayfa-baslik" data-i="gece.baslik">Bu gece: karanlık, Ay ve hava</h1>
+    <p id="geceOzet" class="ozet"></p>
+    <div class="ay-izgara">
+      <div id="ayKart" class="ay-kart"></div>
+      <div class="cizelge-kap">
+        <div id="geceCizelge"></div>
+        <ul class="serit-anahtar cizelge-anahtar" aria-hidden="true"><li class="c-a-gunduz" data-i="an.gunduz">gündüz</li><li class="c-a-alaca" data-i="an.alaca">alacakaranlık</li><li class="c-a-karanlik" data-i="an.karanlik">astronomik karanlık</li><li class="c-a-ay" data-i="an.ay">Ay ufkun üstünde</li><li class="c-a-aysiz" data-i="an.aysiz">Ay’sız karanlık</li></ul>
+        <ol id="olayListe" class="olay-liste"></ol>
+      </div>
+    </div>
+    <p class="aciklama" data-i="gece.ay.aciklama"></p>
+    <h2 data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h2>
     <p class="aciklama" data-i="hava.aciklama"></p>
     <div id="havaSerit"></div>
     <p id="havaOzet" class="ozet" aria-live="polite"></p>
-    <ul class="serit-anahtar" aria-hidden="true"><li class="uygun" data-i="hava.uygun">uygun</li><li class="degil" data-i="hava.degil">uygun değil</li><li class="gunduz" data-i="hava.gunduz">gündüz</li></ul>
+    <ul class="serit-anahtar" aria-hidden="true"><li class="uygun" data-i="hava.uygun">uygun</li><li class="degil" data-i="hava.degil">uygun değil</li><li class="gunduz" data-i="hava.gunduz">gündüz</li><li class="ayli" data-i="hava.ay">Ay ufkun üstünde</li></ul>
     <h2 data-i="esik.baslik">Kullanılan eşikler</h2>
     <p class="aciklama" data-i="esik.aciklama"></p>
     <ul id="esikListe" class="esik-liste"></ul>
@@ -122,13 +133,13 @@ sayfa({ dosya: 'iklim.html', baslik: 'İklim · DAG Gökyüzü', aciklama: 'DAG 
   </section>` });
 
 // yöntem sayfası: makale sözlük anahtarlarından üretilir (metin js/i18n.js içinde)
-const bolumler = [['y.neden', 'y.neden.b'], ['y.gecis', 'y.gecis.b'], ['y.koord', 'y.koord.b'], ['y.iklim', 'y.iklim.b'], ['y.esik', 'y.esik.b'], ['y.duyarlilik', 'y.duyarlilik.b'], ['y.dogrulama', 'y.dogrulama.b']];
+const bolumler = [['y.neden', 'y.neden.b'], ['y.gecis', 'y.gecis.b'], ['y.ay', 'y.ay.b'],['y.koord', 'y.koord.b'], ['y.iklim', 'y.iklim.b'], ['y.esik', 'y.esik.b'], ['y.duyarlilik', 'y.duyarlilik.b'], ['y.dogrulama', 'y.dogrulama.b']];
 const makale = `<article class="makale ilk">
   <h1 data-i="y.baslik"></h1>
   <p class="lead" data-i="y.giris"></p>
 ${bolumler.map(([p, h]) => `  <h2 data-i="${h}"></h2>\n  <p data-i="${p}"></p>`).join('\n')}
   <h2 data-i="y.kaynak.b"></h2>
-  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li></ul>
+  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li><li data-i="y.kaynak3"></li><li data-i="y.kaynak4"></li></ul>
   <h2 data-i="y.yapilmadi.b"></h2>
   <p data-i="y.yapilmadi"></p>
 </article>`;

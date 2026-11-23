@@ -2,6 +2,8 @@ import { DAG } from '../src/gozlemevi.js';
 import { saatDurumu, ESIKLER } from '../src/iklim.js';
 import { t } from './i18n.js';
 import { saatYaz } from './yardimci.js';
+import { ayGorunum, UFUK_AY } from '../src/gece.js';
+import { gozlemci } from './gecisler.js';
 
 export async function havaYukle() {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${DAG.enlemDerece}&longitude=${DAG.boylamDerece}` +
@@ -19,7 +21,8 @@ export function saatleriHazirla(h, simdi = new Date()) {
     const zaman = new Date(h.time[i] + ':00Z');
     if (zaman.getTime() < bas) continue;
     const v = { bulut: h.cloud_cover[i], ruzgar: h.wind_speed_10m[i], ruzgarEs: h.wind_gusts_10m[i], nem: h.relative_humidity_2m[i], yagis: h.precipitation[i] };
-    cikti.push({ zaman, bulut: v.bulut, ...saatDurumu(zaman, v, ESIKLER, DAG) });
+    const ayUstte = ayGorunum(new Date(zaman.getTime() + 30 * 60e3), gozlemci).yukseklik >= UFUK_AY; // saatin ortasında
+    cikti.push({ zaman, bulut: v.bulut, ayUstte, ...saatDurumu(zaman, v, ESIKLER, DAG) });
   }
   return cikti;
 }
@@ -29,9 +32,9 @@ export function seritCiz(kap, saatler) {
   const liste = document.createElement('ol'); liste.className = 'serit';
   for (const s of saatler) {
     const li = document.createElement('li');
-    li.className = !s.gece ? 'gunduz' : s.uygun ? 'uygun' : 'degil';
+    li.className = (!s.gece ? 'gunduz' : s.uygun ? 'uygun' : 'degil') + (s.gece && s.ayUstte ? ' ayli' : '');
     const durum = !s.gece ? t('hava.gunduz') : s.uygun ? t('hava.uygun') : t('hava.degil');
-    li.setAttribute('aria-label', `${saatYaz(s.zaman)}: ${durum}, ${t('hava.bulut')} %${Math.round(s.bulut)}`);
+    li.setAttribute('aria-label', `${saatYaz(s.zaman)}: ${durum}, ${t('hava.bulut')} %${Math.round(s.bulut)}${s.gece && s.ayUstte ? ', ' + t('hava.ay') : ''}`);
     li.innerHTML = `<span class="serit-saat">${saatYaz(s.zaman).slice(0, 2)}</span><span class="serit-cubuk"><i style="height:${Math.max(4, Math.round(s.bulut))}%"></i></span>`;
     liste.append(li);
   }

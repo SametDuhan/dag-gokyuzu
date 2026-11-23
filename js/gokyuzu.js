@@ -2,6 +2,9 @@ import * as sat from 'satellite.js';
 import { anlikGorunum } from '../src/gecis.js';
 import { gozlemci } from './gecisler.js';
 import { t } from './i18n.js';
+import { ayGorunum } from '../src/gece.js';
+import { ayEvresi } from '../src/ay.js';
+import { ayYolu } from './ay-gorsel.js';
 
 const ALTIN = '#f4c56a', MAVI = '#8fc7ff', BEYAZ = '#f2f5ff';
 
@@ -51,6 +54,7 @@ export function gokyuzuKur(canvas) {
     const { sats, gecisler, secili, zaman } = durum, kucuk = Math.max(1.6, boyut * 0.0042);
     for (const g of gecisler.slice(0, 10)) if (g !== secili) iz(g, false);
     if (secili) iz(secili, true);
+    ayCiz(zaman);
     // Şu anda ufuk üstündeki tüm parlak nesneler
     const gorunurAdlar = new Set(gecisler.filter((g) => zaman >= g.dogus && zaman <= g.batis).map((g) => g.ad));
     for (const s of sats) {
@@ -61,6 +65,22 @@ export function gokyuzuKur(canvas) {
       ctx.fillStyle = onde ? ALTIN : 'rgba(242,245,255,0.55)'; ctx.fill();
       if (onde) { ctx.fillStyle = BEYAZ; ctx.font = `500 ${Math.max(11, boyut * 0.027)}px "Hanken Grotesk", sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s.ad.replace(/\s*\(.*$/, ''), x + kucuk * 3, y - kucuk * 2); }
     }
+  }
+
+  // Ay: konumu ve evresi (silüet şematiktir, gökteki eğim açısı gösterilmez). Ufkun altındaysa çizilmez.
+  function ayCiz(zaman) {
+    const v = ayGorunum(zaman, gozlemci);
+    if (v.yukseklik < 0) return;
+    const e = ayEvresi(zaman), [x, y] = nokta(v.azimut, v.yukseklik), r = Math.max(7, boyut * 0.018);
+    ctx.save(); ctx.translate(x, y);
+    const hale = ctx.createRadialGradient(0, 0, r, 0, 0, r * 3.2);
+    hale.addColorStop(0, `rgba(233,237,247,${0.08 + 0.22 * e.aydinlik})`); hale.addColorStop(1, 'rgba(233,237,247,0)');
+    ctx.fillStyle = hale; ctx.beginPath(); ctx.arc(0, 0, r * 3.2, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = '#1a2240'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = '#e9edf7'; ctx.fill(new Path2D(ayYolu(e.aydinlik, e.buyuyen, r)));
+    ctx.fillStyle = 'rgba(233,237,247,0.85)'; ctx.font = `500 ${Math.max(11, boyut * 0.026)}px "Hanken Grotesk", sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t('harita.ay'), 0, r + 5);
+    ctx.restore();
   }
 
   new ResizeObserver(olc).observe(canvas);

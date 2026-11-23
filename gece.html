@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bu gece · DAG Gökyüzü</title>
-<meta name="description" content="DAG için önümüzdeki 24 saatin gözlem koşulları.">
+<meta name="description" content="DAG için bu gecenin karanlık saatleri, Ay evresi ve önümüzdeki 24 saatin gözlem koşulları.">
 <meta name="theme-color" content="#02040a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302040a'/%3E%3Cpath d='M16 4l2.4 9.6L28 16l-9.6 2.4L16 28l-2.4-9.6L4 16l9.6-2.4z' fill='%23f4c56a'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -24,11 +24,22 @@
 <main id="icerik">
 
   <section class="bolum ilk" aria-labelledby="geceBaslik">
-    <h1 id="geceBaslik" class="sayfa-baslik" data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h1>
+    <h1 id="geceBaslik" class="sayfa-baslik" data-i="gece.baslik">Bu gece: karanlık, Ay ve hava</h1>
+    <p id="geceOzet" class="ozet"></p>
+    <div class="ay-izgara">
+      <div id="ayKart" class="ay-kart"></div>
+      <div class="cizelge-kap">
+        <div id="geceCizelge"></div>
+        <ul class="serit-anahtar cizelge-anahtar" aria-hidden="true"><li class="c-a-gunduz" data-i="an.gunduz">gündüz</li><li class="c-a-alaca" data-i="an.alaca">alacakaranlık</li><li class="c-a-karanlik" data-i="an.karanlik">astronomik karanlık</li><li class="c-a-ay" data-i="an.ay">Ay ufkun üstünde</li><li class="c-a-aysiz" data-i="an.aysiz">Ay’sız karanlık</li></ul>
+        <ol id="olayListe" class="olay-liste"></ol>
+      </div>
+    </div>
+    <p class="aciklama" data-i="gece.ay.aciklama"></p>
+    <h2 data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h2>
     <p class="aciklama" data-i="hava.aciklama"></p>
     <div id="havaSerit"></div>
     <p id="havaOzet" class="ozet" aria-live="polite"></p>
-    <ul class="serit-anahtar" aria-hidden="true"><li class="uygun" data-i="hava.uygun">uygun</li><li class="degil" data-i="hava.degil">uygun değil</li><li class="gunduz" data-i="hava.gunduz">gündüz</li></ul>
+    <ul class="serit-anahtar" aria-hidden="true"><li class="uygun" data-i="hava.uygun">uygun</li><li class="degil" data-i="hava.degil">uygun değil</li><li class="gunduz" data-i="hava.gunduz">gündüz</li><li class="ayli" data-i="hava.ay">Ay ufkun üstünde</li></ul>
     <h2 data-i="esik.baslik">Kullanılan eşikler</h2>
     <p class="aciklama" data-i="esik.aciklama"></p>
     <ul id="esikListe" class="esik-liste"></ul>
