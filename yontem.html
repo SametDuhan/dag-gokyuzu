@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yöntem ve doğrulama · DAG Gökyüzü</title>
+<meta name="description" content="DAG Gökyüzü’ndeki sayıların nasıl üretildiği ve nereye kadar güvenilebileceği.">
+<meta name="theme-color" content="#02040a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302040a'/%3E%3Cpath d='M16 4l2.4 9.6L28 16l-9.6 2.4L16 28l-2.4-9.6L4 16l9.6-2.4z' fill='%23f4c56a'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/yazi-tipleri.css">
+<link rel="stylesheet" href="css/stil.css">
+<script type="importmap">{ "imports": { "satellite.js": "./vendor/satellite.js/index.js" } }</script>
+</head>
+<body class="sayfa-yontem">
+<canvas id="yildizlar" aria-hidden="true"></canvas>
+<a class="atla" href="#icerik" data-i="nav.atla">İçeriğe geç</a>
+<header class="ust">
+  <nav class="menu menu-sol" aria-label="Sol gezinme"><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a><a href="gece.html" data-i="nav.gece">Bu gece</a></nav>
+  <div class="dag"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi, ana sayfa">DAG</a></div>
+  <nav class="menu menu-sag" aria-label="Sağ gezinme"><a href="iklim.html" data-i="nav.iklim">İklim</a><a href="yontem.html" data-i="nav.yontem" aria-current="page">Yöntem</a></nav>
+  <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
+</header>
+<main id="icerik">
+  <article class="makale ilk">
+  <h1 data-i="y.baslik"></h1>
+  <p class="lead" data-i="y.giris"></p>
+  <h2 data-i="y.neden.b"></h2>
+  <p data-i="y.neden"></p>
+  <h2 data-i="y.gecis.b"></h2>
+  <p data-i="y.gecis"></p>
+  <h2 data-i="y.koord.b"></h2>
+  <p data-i="y.koord"></p>
+  <h2 data-i="y.iklim.b"></h2>
+  <p data-i="y.iklim"></p>
+  <h2 data-i="y.esik.b"></h2>
+  <p data-i="y.esik"></p>
+  <h2 data-i="y.duyarlilik.b"></h2>
+  <p data-i="y.duyarlilik"></p>
+  <h2 data-i="y.dogrulama.b"></h2>
+  <p data-i="y.dogrulama"></p>
+  <h2 data-i="y.kaynak.b"></h2>
+  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li></ul>
+  <h2 data-i="y.yapilmadi.b"></h2>
+  <p data-i="y.yapilmadi"></p>
+</article>
+</main>
+<footer class="alt">
+  <p data-i="alt.not"></p>
+  <p class="soluk" data-i="alt.yapan"></p>
+</footer>
+<script type="module" src="js/ana.js"></script>
+</body>
+</html>

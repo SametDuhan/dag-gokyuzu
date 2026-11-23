@@ -1,0 +1,13 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import { DAG } from '../src/gozlemevi.js';
+import { iklimOzeti, ESIKLER } from '../src/iklim.js';
+const dir = new URL('../data/arsiv/', import.meta.url);
+const dosyalar = readdirSync(dir).filter((f) => f.endsWith('.json')).sort().map((f) => JSON.parse(readFileSync(new URL(f, dir))));
+const o = iklimOzeti(dosyalar, DAG);
+const ay = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+console.log('Eşikler:', JSON.stringify(ESIKLER));
+console.log('Ay  | gece saati/yıl | uygun %');
+o.aylik.forEach((a, i) => console.log(ay[i].padEnd(4), String(Math.round(a.geceSaat / dosyalar.length)).padStart(6), '  ', (a.oran * 100).toFixed(0).padStart(3) + '%'));
+const T = o.aylik.reduce((s, a) => s + a.geceSaat, 0), U = o.aylik.reduce((s, a) => s + a.uygunSaat, 0);
+console.log('Toplam uygun oran:', (U / T * 100).toFixed(1) + '%');
+console.log('Yıllık:', Object.entries(o.yillik).map(([y, v]) => `${y}:${(v.uygun / v.gece * 100).toFixed(0)}%`).join(' '));
