@@ -1,0 +1,61 @@
+# Her gün CelesTrak'ten parlak uyduların TLE verisini alır, değiştiyse depoya yazar ve siteyi GitHub Pages'e yayımlar.
+# main dalına her push'ta da testler çalışır ve site yeniden yayımlanır.
+name: TLE güncelle ve yayımla
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 12 * * *'   # her gün 12:17 UTC (15:17 TSİ), gece gözleminden önce
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: yayin
+  cancel-in-progress: false
+
+jobs:
+  hazirla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: TLE güncelle
+        if: github.event_name != 'push'
+        run: node araclar/tle-guncelle.mjs
+      - run: npm test
+      - name: Değiştiyse commit at
+        if: github.event_name != 'push'
+        run: |
+          if git diff --quiet -- data/; then echo "TLE değişmedi"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tle-gorunur.txt data/tle-gorunur.tarih
+          git commit -m "TLE: günlük güncelleme $(date -u +%F)"
+          git push
+      - name: Site klasörünü hazırla
+        run: |
+          mkdir _site
+          cp -r index.html gokyuzu.html gece.html iklim.html yontem.html css js src fonts vendor _site/
+          mkdir _site/data
+          cp data/iklim.json data/tle-gorunur.txt data/tle-gorunur.tarih _site/data/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  yayinla:
+    needs: hazirla
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.dagit.outputs.page_url }}
+    steps:
+      - id: dagit
+        uses: actions/deploy-pages@v4

@@ -5,7 +5,7 @@ import { tleYukle, gecisleriHesapla } from './gecisler.js';
 import { gokyuzuKur } from './gokyuzu.js';
 import { havaYukle, saatleriHazirla, seritCiz, esikleriCiz } from './hava.js';
 import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu } from './iklim-gorsel.js';
-import { saatYaz, yonYaz, sureYaz } from './yardimci.js';
+import { saatYaz, yonYaz, sureYaz, TZ } from './yardimci.js';
 
 const $ = (s) => document.querySelector(s);
 const durum = { baslangic: new Date(), gecisler: [], sats: [], secili: null, tle: null, hava: null, iklim: null, hazir: false };
@@ -59,7 +59,9 @@ function sonrakiCiz() {
 }
 function kaynakYazi() {
   const el = $('#kaynak'); if (!el) return; if (!durum.tle) { el.textContent = ''; return; }
-  el.textContent = durum.tle.canli ? t('harita.canli', { n: durum.sats.length }) : t('harita.anlik', { tarih: durum.tle.tarih });
+  const { tur, tarih } = durum.tle;
+  const zaman = tarih && !isNaN(tarih) ? new Intl.DateTimeFormat(getDil() === 'tr' ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: TZ }).format(tarih) : '?';
+  el.textContent = t('harita.' + tur, { n: durum.sats.length, tarih: zaman });
 }
 
 // ---- hava (bu gece sayfası) ----

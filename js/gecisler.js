@@ -12,17 +12,33 @@ function ayristir(metin) {
   return cikti;
 }
 
-// Önce canlı CelesTrak, olmazsa depodaki örnek anlık görüntü.
+const TAZE_SAAT = 36; // depodaki dosya GitHub Actions ile her gün yenilenir; bundan eskiyse canlı veri denenir
+
+async function depodanYukle() {
+  const al = (yol) => fetch(yol, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); });
+  const [metin, tarih] = await Promise.all([al('data/tle-gorunur.txt'), al('data/tle-gorunur.tarih')]);
+  return { sats: ayristir(metin), tarih: new Date(tarih.trim()) };
+}
+
+async function canliYukle() {
+  const r = await fetch('https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=tle', { signal: AbortSignal.timeout(9000) });
+  if (!r.ok) throw new Error(r.status);
+  const sats = ayristir(await r.text());
+  if (sats.length <= 20) throw new Error('az kayıt');
+  return sats;
+}
+
+// Önce depodaki günlük CelesTrak kopyası (her ziyaretçi CelesTrak'e istek atmasın diye);
+// dosya bayatsa canlı CelesTrak; o da olmazsa bayat kopya, açıkça "eski" diye etiketlenir.
+// Dönüş: { sats, tur: 'depo' | 'canli' | 'eski', tarih? }
 export async function tleYukle() {
-  try {
-    const ctrl = new AbortController(); const z = setTimeout(() => ctrl.abort(), 9000);
-    const r = await fetch('https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&FORMAT=tle', { signal: ctrl.signal }); clearTimeout(z);
-    if (!r.ok) throw new Error(r.status);
-    const sats = ayristir(await r.text());
-    if (sats.length > 20) return { sats, canli: true };
-  } catch { /* örnek veriye düş */ }
-  const [metin, tarih] = await Promise.all([fetch('data/tle-gorunur.txt').then((r) => r.text()), fetch('data/tle-gorunur.tarih').then((r) => r.text())]);
-  return { sats: ayristir(metin), canli: false, tarih: tarih.trim().slice(0, 10) };
+  let depo = null;
+  try { depo = await depodanYukle(); } catch { /* canlıyı dene */ }
+  const yasSaat = depo ? (Date.now() - depo.tarih) / 3600e3 : Infinity;
+  if (depo && yasSaat <= TAZE_SAAT && depo.sats.length > 20) return { sats: depo.sats, tur: 'depo', tarih: depo.tarih };
+  try { return { sats: await canliYukle(), tur: 'canli' }; } catch { /* bayat kopyaya düş */ }
+  if (depo) return { sats: depo.sats, tur: 'eski', tarih: depo.tarih };
+  return { sats: [], tur: 'eski', tarih: null };
 }
 
 const bekle = () => new Promise((r) => setTimeout(r, 0));
