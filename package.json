@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.js",
     "vendor": "rm -rf vendor/satellite.js && mkdir -p vendor/satellite.js && cp -r node_modules/satellite.js/dist/. vendor/satellite.js/ && find vendor/satellite.js -name '*.d.ts' -delete && cp node_modules/satellite.js/LICENSE.md vendor/satellite.js/"
   },
   "dependencies": {
