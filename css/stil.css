@@ -201,6 +201,13 @@ h3 { font: 600 1.3rem/1.2 var(--baslik); letter-spacing: -0.01em; margin: 3.2rem
 .makale h2 { font-size: 1.35rem; margin: 2.4rem 0 0.5rem; max-width: none; }
 .makale p { color: var(--yazi-2); margin: 0 0 1rem; text-wrap: pretty; max-width: 42rem; }
 .makale ul { color: var(--yazi-2); padding-left: 1.2rem; } .makale li { margin-bottom: 0.5rem; }
+.tablo-kap { overflow-x: auto; margin: 0.4rem 0 1.4rem; }
+.veri-tablo { width: 100%; min-width: 30rem; border-collapse: collapse; font-size: 0.92rem; }
+.veri-tablo caption { text-align: left; color: var(--yazi-3); font-size: 0.85rem; padding-bottom: 0.6rem; caption-side: top; }
+.veri-tablo th, .veri-tablo td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--cizgi); text-align: right; }
+.veri-tablo thead th { font: 500 0.8rem var(--govde); color: var(--yazi-3); vertical-align: bottom; }
+.veri-tablo th[scope='row'], .veri-tablo thead th:first-child { text-align: left; font-weight: 500; color: var(--yazi); padding-left: 0; }
+.veri-tablo td { font-family: var(--olcu); color: var(--yazi-2); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 62rem) {
   .gok-izgara, .ay-izgara { grid-template-columns: 1fr; }

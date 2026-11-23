@@ -1,0 +1,70 @@
+{
+ "kaynak": "dogrulama/heavens-above-2026-11-23.json",
+ "tle": "dogrulama/tle-2026-11-23.txt",
+ "alindi": "2026-11-23T08:32Z",
+ "uydular": [
+  {
+   "ad": "HST",
+   "gecis": 8
+  },
+  {
+   "ad": "ISS (ZARYA)",
+   "gecis": 13
+  },
+  {
+   "ad": "CSS (TIANHE)",
+   "gecis": 13
+  }
+ ],
+ "ozet": {
+  "yukselis10": {
+   "n": 17,
+   "bulunamadi": 0,
+   "enBuyuk": 1.9,
+   "altFarkEnBuyuk": 0,
+   "azUyusmayan": 0,
+   "ortalamaSn": 0.7,
+   "ortalamaMutlakSn": 0.7
+  },
+  "zirve": {
+   "n": 21,
+   "bulunamadi": 0,
+   "enBuyuk": 15,
+   "altFarkEnBuyuk": 0.5,
+   "azUyusmayan": 0,
+   "ortalamaSn": 2.5,
+   "ortalamaMutlakSn": 2.5
+  },
+  "alcalis10": {
+   "n": 26,
+   "bulunamadi": 0,
+   "enBuyuk": 13.3,
+   "altFarkEnBuyuk": 0.1,
+   "azUyusmayan": 0,
+   "ortalamaSn": 3.4,
+   "ortalamaMutlakSn": 3.4
+  },
+  "golgedenCikis": {
+   "n": 17,
+   "bulunamadi": 0,
+   "enBuyuk": 12.5,
+   "altFarkEnBuyuk": 0.5,
+   "azUyusmayan": 0,
+   "ortalamaSn": 4.2,
+   "ortalamaMutlakSn": 4.2
+  },
+  "golgeyeGiris": {
+   "n": 8,
+   "bulunamadi": 0,
+   "enBuyuk": 1.5,
+   "altFarkEnBuyuk": 0.6,
+   "azUyusmayan": 0,
+   "ortalamaSn": 0.5,
+   "ortalamaMutlakSn": 0.6
+  }
+ },
+ "siteOzet": {
+  "n": 34,
+  "enBuyukZirveHatasiSn": 0.5
+ }
+}

@@ -134,12 +134,23 @@ sayfa({ dosya: 'iklim.html', baslik: 'İklim · DAG Gökyüzü', aciklama: 'DAG 
 
 // yöntem sayfası: makale sözlük anahtarlarından üretilir (metin js/i18n.js içinde)
 const bolumler = [['y.neden', 'y.neden.b'], ['y.gecis', 'y.gecis.b'], ['y.ay', 'y.ay.b'],['y.koord', 'y.koord.b'], ['y.iklim', 'y.iklim.b'], ['y.esik', 'y.esik.b'], ['y.duyarlilik', 'y.duyarlilik.b'], ['y.dogrulama', 'y.dogrulama.b']];
+// Heavens-Above karşılaştırma tablosu: sayılar dogrulama/heavens-above-sonuc.json'dan (node araclar/heavens-above-kiyas.mjs --yaz)
+const ha = JSON.parse(readFileSync(new URL('dogrulama/heavens-above-sonuc.json', kok), 'utf8'));
+const haSatir = (tur) => { const o = ha.ozet[tur]; return `<tr><th scope="row" data-i="ha.${tur}"></th><td>${o.n}</td><td>${o.ortalamaMutlakSn.toFixed(1)}</td><td>${o.enBuyuk.toFixed(1)}</td><td>${o.altFarkEnBuyuk.toFixed(1)}°</td></tr>`; };
+const haTablo = `  <h2 data-i="y.ha.b"></h2>
+  <p data-i="y.ha"></p>
+  <div class="tablo-kap"><table class="veri-tablo">
+    <caption data-i="ha.baslik"></caption>
+    <thead><tr><th scope="col" data-i="ha.olay"></th><th scope="col" data-i="ha.n"></th><th scope="col" data-i="ha.ort"></th><th scope="col" data-i="ha.max"></th><th scope="col" data-i="ha.alt"></th></tr></thead>
+    <tbody>${['yukselis10', 'zirve', 'alcalis10', 'golgedenCikis', 'golgeyeGiris'].map(haSatir).join('')}</tbody>
+  </table></div>
+  <p data-i="y.ha2"></p>`;
 const makale = `<article class="makale ilk">
   <h1 data-i="y.baslik"></h1>
   <p class="lead" data-i="y.giris"></p>
-${bolumler.map(([p, h]) => `  <h2 data-i="${h}"></h2>\n  <p data-i="${p}"></p>`).join('\n')}
+${bolumler.map(([p, h]) => `  <h2 data-i="${h}"></h2>\n  <p data-i="${p}"></p>` + (p === 'y.gecis' ? '\n' + haTablo : '')).join('\n')}
   <h2 data-i="y.kaynak.b"></h2>
-  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li><li data-i="y.kaynak3"></li><li data-i="y.kaynak4"></li></ul>
+  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li><li data-i="y.kaynak3"></li><li data-i="y.kaynak4"></li><li data-i="y.kaynak5"></li></ul>
   <h2 data-i="y.yapilmadi.b"></h2>
   <p data-i="y.yapilmadi"></p>
 </article>`;
