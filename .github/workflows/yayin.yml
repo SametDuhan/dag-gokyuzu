@@ -46,6 +46,9 @@ jobs:
           cp -r index.html gokyuzu.html gece.html iklim.html yontem.html css js src fonts vendor _site/
           mkdir _site/data
           cp data/iklim.json data/tle-gorunur.txt data/tle-gorunur.tarih _site/data/
+          # Pages dosyaları 10 dk önbellekte tutar; JS/CSS adreslerine commit kimliği eklenir ki
+          # yeni yayından sonra tarayıcı eski modülleri yeni HTML ile karıştırmasın.
+          node araclar/surum-ekle.mjs _site "$(git rev-parse --short HEAD)"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
