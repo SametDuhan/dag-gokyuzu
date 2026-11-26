@@ -2,7 +2,8 @@ import * as sat from 'satellite.js';
 import { anlikGorunum } from '../src/gecis.js';
 import { gozlemci } from './gecisler.js';
 import { t } from './i18n.js';
-import { ayGorunum } from '../src/gece.js';
+import { ayGorunum, govdeGorunum } from '../src/gece.js';
+import { GEZEGENLER, gezegenKonumu, parlaklik } from '../src/gezegen.js';
 import { ayEvresi } from '../src/ay.js';
 import { ayYolu } from './ay-gorsel.js';
 
@@ -54,7 +55,7 @@ export function gokyuzuKur(canvas) {
     const { sats, gecisler, secili, zaman } = durum, kucuk = Math.max(1.6, boyut * 0.0042);
     for (const g of gecisler.slice(0, 10)) if (g !== secili) iz(g, false);
     if (secili) iz(secili, true);
-    ayCiz(zaman);
+    ayCiz(zaman); gezegenCiz(zaman);
     // Şu anda ufuk üstündeki tüm parlak nesneler
     const gorunurAdlar = new Set(gecisler.filter((g) => zaman >= g.dogus && zaman <= g.batis).map((g) => g.ad));
     for (const s of sats) {
@@ -64,6 +65,23 @@ export function gokyuzuKur(canvas) {
       ctx.beginPath(); ctx.arc(x, y, onde ? kucuk * 2.1 : kucuk, 0, 6.2832);
       ctx.fillStyle = onde ? ALTIN : 'rgba(242,245,255,0.55)'; ctx.fill();
       if (onde) { ctx.fillStyle = BEYAZ; ctx.font = `500 ${Math.max(11, boyut * 0.027)}px "Hanken Grotesk", sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s.ad.replace(/\s*\(.*$/, ''), x + kucuk * 3, y - kucuk * 2); }
+    }
+  }
+
+  // Gezegenler: ufuk üstündekiler, parlaklığa göre boyutlu nokta ve ad.
+  const GEZ_RENK = { merkur: '#c9c4bd', venus: '#fff6dc', mars: '#ff8a65', jupiter: '#ffe3b0', saturn: '#f2d98f', uranus: '#9be7f0', neptun: '#7ea6ff' };
+  function gezegenCiz(zaman) {
+    for (const ad of GEZEGENLER) {
+      const k = gezegenKonumu(ad, zaman), v = govdeGorunum(k.eci, zaman, gozlemci);
+      if (v.yukseklik <= 0) continue;
+      const [x, y] = nokta(v.azimut, v.yukseklik), kadir = parlaklik(ad, k);
+      const r = Math.max(2.2, Math.min(6.5, 4.6 - 0.55 * kadir)) * Math.max(1, boyut / 480);
+      const hale = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+      hale.addColorStop(0, GEZ_RENK[ad] + '66'); hale.addColorStop(1, GEZ_RENK[ad] + '00');
+      ctx.fillStyle = hale; ctx.beginPath(); ctx.arc(x, y, r * 3, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = GEZ_RENK[ad]; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = GEZ_RENK[ad]; ctx.font = `500 ${Math.max(11, boyut * 0.026)}px "Hanken Grotesk", sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(t('gez.' + ad), x + r + 5, y - r);
     }
   }
 

@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as sat from 'satellite.js';
-import { DAG } from '../src/gozlemevi.js';
+import { DAG_WIKIPEDIA as DAG } from '../src/gozlemevi.js'; // Heavens-Above bu koordinatla sorgulandı
 import { gozlemciKur, gecisleriBul } from '../src/gecis.js';
 import { tleAyikla } from '../src/tle.js';
 

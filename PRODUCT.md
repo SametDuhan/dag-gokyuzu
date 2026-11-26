@@ -27,10 +27,10 @@ DAG'a özel (genel bir uydu takip sitesi değil) ve hesaplarını kamuya açık 
 
 ## Capabilities and Constraints
 - Uydu geçişi: satellite.js SGP4; TLE doğruluğu km mertebesi. Güneş konumu düşük duyarlıklı formül; yer gölgesi silindirik model.
-- DAG koordinatı 39.783°N 41.233°E, 3170 m — tek kaynak (Wikipedia yansıması), resmî değil.
+- Koordinatlar Türkiye Ulusal Gözlemevleri'nin resmî yerleşke sayfalarından (26 Kasım 2026): DAG 39°46′43″K 41°13′37″D 3170 m, TUG Bakırlıtepe 36°49′27″K 30°20′08″D 2550 m. İlk sürümdeki Wikipedia değeri (39.783, 41.233) yalnız Heavens-Above/USNO doğrulama sabitlerinde (`DAG_WIKIPEDIA`) kaldı.
 - Hava verisi model çıktısı (~7 km grid, model rakımı 3120 m), ölçüm değil.
 - "Gözlem için uygun saat" eşikleri yazarın varsayımı (Güneş < −12°, bulut ≤%30, rüzgâr ≤36 km/s, hamle ≤50, nem ≤%85, yağış yok); resmî işletme sınırı değil. Nem eşiği sonucu en çok etkileyen değişken (%70→%30 uygun, sınırsız→%51); rüzgâr eşiği neredeyse etkisiz. Mutlak oranlar aralık olarak, mevsimsel desen ve ölçümle uyum öne çıkarılarak sunulur.
-- Henüz yapılmadı: uydu geçişlerinin Heavens-Above ile doğrulanması.
+- Heavens-Above karşılaştırması ilk (Wikipedia) koordinatla yapıldı; resmî koordinatla yinelenmedi. Gezegenler ve Ay astronomy-engine'e karşı test edilir; jet akımı rüzgârı seeing tahmini değil, göstergedir.
 - Son tarih 18 Aralık 2026 17:00; takvim docs/PLAN.md ve Masaüstü "DAG Gokyuzu Proje".
 
 ## Brand Commitments
@@ -39,7 +39,7 @@ Kullanıcının bağlayıcı görsel kararları: genel zemin siyah ve lacivert, 
 ## Evidence on Hand
 - data/arsiv/ altında 2015–2026 saatlik hava verisi (12 dosya); araclar/ altında analiz betikleri; 7 geçen Node testi.
 - Yayımlanmış dayanaklar: Atalay, Nasıroğlu & Yeşilyaprak 2024 (JARNAS 10(1):9–20, DAG'da Boltwood BWCS II ölçümü); Kaba & Yeşilyaprak 2021 (JARNAS 7(3):304–318, CM SAF CFC; yalnız özet okundu).
-- Yok ve uydurulmayacak: TUG/DAG'ın bu aracı istediğine dair kanıt, resmî işletme eşikleri, resmî koordinat, uydu geçişi doğrulama sonucu.
+- Yok ve uydurulmayacak: TUG/DAG'ın bu aracı istediğine dair kanıt, resmî işletme eşikleri, resmî "açık gece" tanımı, gerçek seeing tahmini.
 
 ## Product Principles
 1. Dürüstlük önce: model verisi ölçüm gibi sunulmaz, eşikler varsayım olarak etiketlenir, bilinmeyen bilinmiyor diye yazılır.

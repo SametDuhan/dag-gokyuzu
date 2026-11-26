@@ -138,6 +138,16 @@ sayfa({ dosya: 'index.html', baslik: 'DAG Gökyüzü', aciklama: 'Doğu Anadolu 
       ${[1, 2, 3].map((n) => `<li class="panel gor"><p class="kanit-fig" data-i="kanit.${n}.f"></p><h3 data-i="kanit.${n}.b"></h3><p data-i="kanit.${n}"></p></li>`).join('\n      ')}
     </ul>
     <p class="devam gor"><a class="baglanti" href="yontem.html" data-i="ayrinti">Yöntem, eşikler ve sınırlar</a></p>
+  </section>
+
+  <section class="alanlar" aria-labelledby="alanB">
+    <div class="gor">
+      <h2 id="alanB" data-i="alan.baslik">Duyurudaki alanlar ve bu sitenin onlarda yaptığı</h2>
+      <p class="aciklama" data-i="alan.aciklama"></p>
+    </div>
+    <ul class="alan-liste">
+      ${[['1', 'gokyuzu.html'], ['2', 'gece.html'], ['3', 'iklim.html'], ['4', 'yontem.html'], ['5', 'gece.html'], ['6', 'gece.html']].map(([n, h]) => `<li class="gor"><a href="${h}"><span class="alan-no" aria-hidden="true">0${n}</span><strong data-i="alan.${n}.b"></strong><span data-i="alan.${n}"></span></a></li>`).join('\n      ')}
+    </ul>
   </section>` });
 
 sayfa({ dosya: 'gokyuzu.html', baslik: 'Gökyüzü · DAG Gökyüzü', aciklama: 'DAG’dan görünen gökyüzü ve önümüzdeki 24 saatin parlak uydu geçişleri.', aktif: 'gokyuzu', govde: `
@@ -179,6 +189,26 @@ sayfa({ dosya: 'gece.html', baslik: 'Bu gece · DAG Gökyüzü', aciklama: 'DAG 
         <ul class="serit-anahtar cizelge-anahtar" aria-hidden="true"><li class="c-a-gunduz" data-i="an.gunduz">gündüz</li><li class="c-a-alaca" data-i="an.alaca">alacakaranlık</li><li class="c-a-karanlik" data-i="an.karanlik">astronomik karanlık</li><li class="c-a-ay" data-i="an.ay">Ay ufkun üstünde</li><li class="c-a-aysiz" data-i="an.aysiz">Ay’sız karanlık</li></ul>
         <ol id="olayListe" class="olay-liste"></ol>
       </div>
+      <div class="panel panel-kosul gor">
+        <h2 data-i="kos.baslik">Şimdi DAG’da</h2>
+        <p class="aciklama" data-i="kos.aciklama"></p>
+        <ul id="kosulKutular" class="stats stats-5"></ul>
+        <h3 class="alt-baslik" data-i="kos.katman">Önümüzdeki 24 saat: bulut katmanları ve jet akımı</h3>
+        <div id="katmanlar"></div>
+        <p class="not" data-i="kos.not"></p>
+      </div>
+      <div class="panel panel-gezegen gor">
+        <h2 data-i="gez.baslik">Bu gece gezegenler</h2>
+        <p class="aciklama" data-i="gez.aciklama"></p>
+        <div id="gezegenTablo" class="tablo-kap duz"></div>
+      </div>
+      <div class="panel panel-takvim gor">
+        <h2 data-i="tak.baslik">30 gecelik gözlem takvimi</h2>
+        <p class="aciklama" data-i="tak.aciklama"></p>
+        <p id="takvimOzet" class="ozet"></p>
+        <ol id="takvim" class="takvim"></ol>
+        <ul class="serit-anahtar tak-anahtar" aria-hidden="true"><li class="t-k" data-i="an.karanlik">astronomik karanlık</li><li class="t-a" data-i="an.aysiz">Ay’sız karanlık</li></ul>
+      </div>
       <div class="panel panel-hava gor">
         <h2 data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h2>
         <p class="aciklama" data-i="hava.aciklama"></p>
@@ -190,6 +220,18 @@ sayfa({ dosya: 'gece.html', baslik: 'Bu gece · DAG Gökyüzü', aciklama: 'DAG 
         <h2 data-i="esik.baslik">Kullanılan eşikler</h2>
         <p class="aciklama" data-i="esik.aciklama"></p>
         <ul id="esikListe" class="esik-liste"></ul>
+      </div>
+      <div class="panel panel-dis gor">
+        <h2 data-i="dis.baslik">Daha fazla kaynak</h2>
+        <p class="aciklama" data-i="dis.aciklama"></p>
+        <ul class="dis-liste">
+          <li><a href="https://www.windy.com/39.779/41.227" ${DIS} data-i="dis.windy">Windy</a></li>
+          <li><a href="https://www.ventusky.com/?p=39.779;41.227;8&amp;l=clouds" ${DIS} data-i="dis.ventusky">Ventusky</a></li>
+          <li><a href="http://www.7timer.info/bin/astro.php?lon=41.227&amp;lat=39.779&amp;lang=en&amp;ac=0&amp;unit=metric&amp;output=internal&amp;tzshift=0" ${DIS} data-i="dis.seeing">7Timer</a></li>
+          <li><a href="https://www.swpc.noaa.gov/" ${DIS} data-i="dis.swpc">NOAA SWPC</a></li>
+          <li><a href="https://trgozlemevleri.gov.tr/en/campuses/erzurum-dag" ${DIS} data-i="dis.dag">TUG DAG</a></li>
+          <li><a href="https://staj.trgozlemevleri.gov.tr" ${DIS} data-i="dis.staj">TUG staj</a></li>
+        </ul>
       </div>
     </div>
   </section>` });
@@ -212,10 +254,25 @@ sayfa({ dosya: 'iklim.html', baslik: 'İklim · DAG Gökyüzü', aciklama: 'DAG 
       <div class="grafik"><div id="karsilastirma"></div>
         <ul class="grafik-anahtar"><li class="a-olcum" data-i="olcum.olcum">Ölçüm</li><li class="a-model" data-i="olcum.model">Model</li></ul></div>
     </div>
+    <div class="panel resmi-panel gor">
+      <h2 data-i="ik2.baslik">Resmî ölçümle karşılaştırma: DAG sensörü</h2>
+      <p class="aciklama" data-i="ik2.aciklama"></p>
+      <div id="resmiTablo" class="tablo-kap duz"></div>
+      <p id="resmiNot" class="not"></p>
+    </div>
+    <div class="panel yerleske-panel gor">
+      <div class="yerleske-metin">
+        <h2 data-i="ik3.baslik">İki yerleşke: DAG ve TUG Bakırlıtepe</h2>
+        <p class="aciklama" data-i="ik3.aciklama"></p>
+        <div class="grafik"><div id="yerleskeGrafik"></div>
+          <ul class="grafik-anahtar"><li class="a-dag" data-i="ik3.dag">DAG</li><li class="a-tug" data-i="ik3.tug">TUG</li></ul></div>
+      </div>
+      <div class="yerleske-tablo"><div id="yerleskeTablo" class="tablo-kap duz"></div><p class="not" data-i="ik3.not"></p></div>
+    </div>
   </section>` });
 
 // yöntem sayfası: makale sözlük anahtarlarından üretilir (metin js/i18n.js içinde)
-const bolumler = [['y.neden', 'y.neden.b'], ['y.gecis', 'y.gecis.b'], ['y.ay', 'y.ay.b'], ['y.koord', 'y.koord.b'], ['y.iklim', 'y.iklim.b'], ['y.esik', 'y.esik.b'], ['y.duyarlilik', 'y.duyarlilik.b'], ['y.dogrulama', 'y.dogrulama.b']];
+const bolumler = [['y.neden', 'y.neden.b'], ['y.gecis', 'y.gecis.b'], ['y.ay', 'y.ay.b'], ['y.gezegen', 'y.gezegen.b'], ['y.koord', 'y.koord.b'], ['y.iklim', 'y.iklim.b'], ['y.esik', 'y.esik.b'], ['y.duyarlilik', 'y.duyarlilik.b'], ['y.dogrulama', 'y.dogrulama.b'], ['y.resmi', 'y.resmi.b'], ['y.kosul', 'y.kosul.b']];
 // Heavens-Above karşılaştırma tablosu: sayılar dogrulama/heavens-above-sonuc.json'dan (node araclar/heavens-above-kiyas.mjs --yaz)
 const ha = JSON.parse(readFileSync(new URL('dogrulama/heavens-above-sonuc.json', kok), 'utf8'));
 const haSatir = (tur) => { const o = ha.ozet[tur]; return `<tr><th scope="row" data-i="ha.${tur}"></th><td>${o.n}</td><td>${o.ortalamaMutlakSn.toFixed(1)}</td><td>${o.enBuyuk.toFixed(1)}</td><td>${o.altFarkEnBuyuk.toFixed(1)}°</td></tr>`; };
@@ -237,7 +294,7 @@ const makale = `<div class="yontem-izgara">
     ${sayfaUst('ey.yontem', 'Şeffaflık', 'yontemB', 'y.baslik', 'Yöntem ve doğrulama', '      <p class="lead" data-i="y.giris"></p>')}
 ${bolumler.map(([p, h]) => `  <h2 id="${sId(h)}" data-i="${h}"></h2>\n  <p data-i="${p}"></p>` + (p === 'y.gecis' ? '\n' + haTablo : '')).join('\n')}
   <h2 id="s-kaynak" data-i="y.kaynak.b"></h2>
-  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li><li data-i="y.kaynak3"></li><li data-i="y.kaynak4"></li><li data-i="y.kaynak5"></li></ul>
+  <ul><li data-i="y.kaynak1"></li><li data-i="y.kaynak2"></li><li data-i="y.kaynak3"></li><li data-i="y.kaynak4"></li><li data-i="y.kaynak5"></li><li data-i="y.kaynak6"></li><li data-i="y.kaynak7"></li></ul>
   <h2 id="s-yapilmadi" data-i="y.yapilmadi.b"></h2>
   <p data-i="y.yapilmadi"></p>
   </article>

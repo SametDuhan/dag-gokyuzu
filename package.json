@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "satellite.js": "^7.2.0"
+  },
+  "devDependencies": {
+    "astronomy-engine": "^2.1.19"
   }
 }

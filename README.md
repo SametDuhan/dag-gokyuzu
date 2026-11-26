@@ -4,8 +4,9 @@ Doğu Anadolu Gözlemevi (DAG, Karakayatepe, Erzurum, ~3170 m) için gözlem gec
 
 **Canlı site:** https://sametduhan.github.io/dag-gokyuzu/
 
-- **Gökyüzü / Bu gece:** CelesTrak TLE + SGP4 (satellite.js) ile DAG için görünür uydu geçişleri, kutupsal gökyüzü haritası, Open-Meteo tahminiyle önümüzdeki 24 saatin gözlem koşulları.
-- **İklim:** Open-Meteo arşivinden 2015–2026 saatlik veriyle ay × saat açık gökyüzü istatistiği; DAG'daki Boltwood BWCS II ölçümüyle (Atalay vd. 2024) karşılaştırma (aylık r ≈ 0.86–0.88).
+- **Gökyüzü:** CelesTrak TLE + SGP4 (satellite.js) ile DAG için görünür uydu geçişleri; Ay ve gezegenlerle birlikte kutupsal gökyüzü haritası.
+- **Bu gece:** karanlık süresi ve Ay; gezegenler (kendi Kepler hesabı, astronomy-engine ile test edilir); Open-Meteo modelinin şimdiki değerleri, bulut katmanları, 250 hPa jet akımı rüzgârı, NOAA Kp indeksi; 30 gecelik Ay'sız karanlık takvimi; önümüzdeki 24 saatin gözlem koşulları.
+- **İklim:** Open-Meteo arşivinden 2015–2026 saatlik veriyle ay × saat açık gökyüzü istatistiği; DAG'daki Boltwood BWCS II ölçümüyle (Atalay vd. 2024) ve Türkiye Ulusal Gözlemevleri'nin yayımladığı Vaisala özetiyle karşılaştırma; DAG ve TUG Bakırlıtepe karşılaştırması.
 - **Yöntem:** eşikler, sınırlar, doğrulama ve kaynaklar `yontem.html` sayfasında.
 
 TUG 2027/1 staj başvurusu için hazırlanmış bağımsız bir çalışmadır; resmî bir TUG/DAG aracı değildir.

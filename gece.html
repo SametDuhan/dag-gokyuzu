@@ -45,6 +45,26 @@
         <ul class="serit-anahtar cizelge-anahtar" aria-hidden="true"><li class="c-a-gunduz" data-i="an.gunduz">gündüz</li><li class="c-a-alaca" data-i="an.alaca">alacakaranlık</li><li class="c-a-karanlik" data-i="an.karanlik">astronomik karanlık</li><li class="c-a-ay" data-i="an.ay">Ay ufkun üstünde</li><li class="c-a-aysiz" data-i="an.aysiz">Ay’sız karanlık</li></ul>
         <ol id="olayListe" class="olay-liste"></ol>
       </div>
+      <div class="panel panel-kosul gor">
+        <h2 data-i="kos.baslik">Şimdi DAG’da</h2>
+        <p class="aciklama" data-i="kos.aciklama"></p>
+        <ul id="kosulKutular" class="stats stats-5"></ul>
+        <h3 class="alt-baslik" data-i="kos.katman">Önümüzdeki 24 saat: bulut katmanları ve jet akımı</h3>
+        <div id="katmanlar"></div>
+        <p class="not" data-i="kos.not"></p>
+      </div>
+      <div class="panel panel-gezegen gor">
+        <h2 data-i="gez.baslik">Bu gece gezegenler</h2>
+        <p class="aciklama" data-i="gez.aciklama"></p>
+        <div id="gezegenTablo" class="tablo-kap duz"></div>
+      </div>
+      <div class="panel panel-takvim gor">
+        <h2 data-i="tak.baslik">30 gecelik gözlem takvimi</h2>
+        <p class="aciklama" data-i="tak.aciklama"></p>
+        <p id="takvimOzet" class="ozet"></p>
+        <ol id="takvim" class="takvim"></ol>
+        <ul class="serit-anahtar tak-anahtar" aria-hidden="true"><li class="t-k" data-i="an.karanlik">astronomik karanlık</li><li class="t-a" data-i="an.aysiz">Ay’sız karanlık</li></ul>
+      </div>
       <div class="panel panel-hava gor">
         <h2 data-i="hava.baslik">Önümüzdeki 24 saat: gözlem koşulları</h2>
         <p class="aciklama" data-i="hava.aciklama"></p>
@@ -56,6 +76,18 @@
         <h2 data-i="esik.baslik">Kullanılan eşikler</h2>
         <p class="aciklama" data-i="esik.aciklama"></p>
         <ul id="esikListe" class="esik-liste"></ul>
+      </div>
+      <div class="panel panel-dis gor">
+        <h2 data-i="dis.baslik">Daha fazla kaynak</h2>
+        <p class="aciklama" data-i="dis.aciklama"></p>
+        <ul class="dis-liste">
+          <li><a href="https://www.windy.com/39.779/41.227" target="_blank" rel="noopener" data-i="dis.windy">Windy</a></li>
+          <li><a href="https://www.ventusky.com/?p=39.779;41.227;8&amp;l=clouds" target="_blank" rel="noopener" data-i="dis.ventusky">Ventusky</a></li>
+          <li><a href="http://www.7timer.info/bin/astro.php?lon=41.227&amp;lat=39.779&amp;lang=en&amp;ac=0&amp;unit=metric&amp;output=internal&amp;tzshift=0" target="_blank" rel="noopener" data-i="dis.seeing">7Timer</a></li>
+          <li><a href="https://www.swpc.noaa.gov/" target="_blank" rel="noopener" data-i="dis.swpc">NOAA SWPC</a></li>
+          <li><a href="https://trgozlemevleri.gov.tr/en/campuses/erzurum-dag" target="_blank" rel="noopener" data-i="dis.dag">TUG DAG</a></li>
+          <li><a href="https://staj.trgozlemevleri.gov.tr" target="_blank" rel="noopener" data-i="dis.staj">TUG staj</a></li>
+        </ul>
       </div>
     </div>
   </section>

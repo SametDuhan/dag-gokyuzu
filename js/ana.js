@@ -8,6 +8,12 @@ import { gokyuzuKur } from './gokyuzu.js';
 import { havaYukle, saatleriHazirla, seritCiz, esikleriCiz } from './hava.js';
 import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu, ozetKartlariCiz } from './iklim-gorsel.js';
 import { efektleriKur } from './efekt.js';
+import { yerleskeYukle, resmiKiyasCiz, yerleskeGrafikCiz, yerleskeTabloCiz } from './yerleske-gorsel.js';
+import { gezegenGecesi } from '../src/gezegen-gorunum.js';
+import { gezegenTabloCiz } from './gezegen-gorsel.js';
+import { kosulYukle, kpYukle, kosulCiz, katmanCiz } from './kosul.js';
+import { gozlemTakvimi } from '../src/takvim.js';
+import { takvimCiz } from './takvim-gorsel.js';
 import { saatYaz, yonYaz, sureYaz, TZ } from './yardimci.js';
 
 const $ = (s) => document.querySelector(s);
@@ -70,11 +76,26 @@ function kaynakYazi() {
 }
 
 // ---- Ay ve karanlık (bu gece sayfası) ----
-let geceOz = null;
+let geceOz = null, gezegenler = null;
 function geceCiz() {
   if (!$('#ayKart')) return;
   geceOz ??= geceOzeti(new Date(), gozlemci);
   ozetYaz($('#geceOzet'), geceOz); ayKartCiz($('#ayKart'), geceOz); cizelgeCiz($('#geceCizelge'), geceOz); olaylarCiz($('#olayListe'), geceOz);
+  gezegenler ??= gezegenGecesi(geceOz, gozlemci); gezegenTabloCiz($('#gezegenTablo'), gezegenler); takvimGuncelle();
+}
+
+// ---- şimdiki koşullar ve 30 gecelik takvim (bu gece sayfası) ----
+function kosulKutuCiz() {
+  const kap = $('#kosulKutular'); if (!kap) return;
+  if (!durum.kosul) return;
+  if (durum.kosul === 'yok') { kap.innerHTML = `<li class="stat-yok">${t('kos.yok')}</li>`; $('#katmanlar').replaceChildren(); return; }
+  kosulCiz(kap, durum.kosul, durum.kp === 'yok' ? null : durum.kp); katmanCiz($('#katmanlar'), durum.kosul);
+}
+let takvimListe = null;
+function takvimGuncelle() {
+  if (!$('#takvim')) return;
+  takvimListe ??= gozlemTakvimi(gozlemci);
+  takvimCiz(takvimListe, $('#takvim'), $('#takvimOzet'));
 }
 
 // ---- ana sayfa kartı: bu gece ----
@@ -114,13 +135,24 @@ function iklimCiz() {
   ozetKartlariCiz($('#iklimStat'), v); isiCiz($('#isi'), v); olcekCiz($('#olcek')); karsilastirmaCiz($('#karsilastirma'), v);
 }
 
-document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); anaKartlar(); havaCiz(); iklimCiz(); });
+function yerleskeCiz() {
+  const v = durum.yerleske; if (!v || !$('#resmiTablo')) return;
+  $('#resmiNot').textContent = resmiKiyasCiz($('#resmiTablo'), v);
+  yerleskeGrafikCiz($('#yerleskeGrafik'), v); yerleskeTabloCiz($('#yerleskeTablo'), v);
+}
+
+document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); anaKartlar(); havaCiz(); iklimCiz(); yerleskeCiz(); kosulKutuCiz(); });
 dilKur(ilkDil());
 
 // ---- veri akışı: yalnız ilgili sayfada ----
 (async () => {
   if ($('#isi') || $('#iklimKart')) iklimYukle().then((v) => { durum.iklim = v; iklimCiz(); }).catch(() => {});
+  if ($('#resmiTablo')) yerleskeYukle().then((v) => { durum.yerleske = v; yerleskeCiz(); }).catch(() => {});
   if ($('#havaSerit')) { havaCiz(); havaYukle().then((h) => { durum.hava = h; havaCiz(); }).catch(() => { durum.hava = 'yok'; havaCiz(); }); }
+  if ($('#kosulKutular')) {
+    kpYukle().then((k) => { durum.kp = k; kosulKutuCiz(); }).catch(() => { durum.kp = 'yok'; kosulKutuCiz(); });
+    kosulYukle().then((v) => { durum.kosul = v; kosulKutuCiz(); }).catch(() => { durum.kosul = 'yok'; kosulKutuCiz(); });
+  }
   if (!harita && !$('#sonraki')) return;
   sonrakiCiz();
   const tle = await tleYukle(); durum.tle = tle; durum.sats = tle.sats; kaynakYazi();

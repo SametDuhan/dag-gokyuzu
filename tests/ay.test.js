@@ -2,7 +2,7 @@
 // (aa.usno.navy.mil/api/rstt/oneday, koordinat 39.783,41.233, tz=3; ve /api/moon/phases; 23 Kasım 2026'da alındı).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DAG } from '../src/gozlemevi.js';
+import { DAG_WIKIPEDIA as DAG } from '../src/gozlemevi.js'; // USNO değerleri bu koordinatla alındı
 import { gozlemciKur } from '../src/gecis.js';
 import { ayEvresi, evreAdi } from '../src/ay.js';
 import { ayGorunum, gunesGorunum, UFUK_AY, UFUK_GUNES, geceOzeti, gecePenceresi } from '../src/gece.js';
