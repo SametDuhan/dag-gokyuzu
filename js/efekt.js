@@ -6,6 +6,8 @@ export function efektleriKur() {
     const durumla = () => ust.classList.toggle('kompakt', scrollY > 60);
     durumla(); addEventListener('scroll', durumla, { passive: true });
   }
+  const sahne = document.getElementById('sahne');
+  if (sahne && 'IntersectionObserver' in window) new IntersectionObserver(([k]) => sahne.classList.toggle('dur', !k.isIntersecting)).observe(sahne);
   const ogeler = document.querySelectorAll('.gor');
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
     for (const e of ogeler) e.classList.add('gorundu');

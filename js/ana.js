@@ -77,11 +77,13 @@ function kaynakYazi() {
 
 // ---- Ay ve karanlık (bu gece sayfası) ----
 let geceOz = null, gezegenler = null;
+const bosta = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 50));
 function geceCiz() {
   if (!$('#ayKart')) return;
   geceOz ??= geceOzeti(new Date(), gozlemci);
   ozetYaz($('#geceOzet'), geceOz); ayKartCiz($('#ayKart'), geceOz); cizelgeCiz($('#geceCizelge'), geceOz); olaylarCiz($('#olayListe'), geceOz);
-  gezegenler ??= gezegenGecesi(geceOz, gozlemci); gezegenTabloCiz($('#gezegenTablo'), gezegenler); takvimGuncelle();
+  // gezegenler ve takvim ilk çizimi geciktirmesin: tarayıcı boştayken hesaplanır
+  bosta(() => { gezegenler ??= gezegenGecesi(geceOz, gozlemci); gezegenTabloCiz($('#gezegenTablo'), gezegenler); takvimGuncelle(); });
 }
 
 // ---- şimdiki koşullar ve 30 gecelik takvim (bu gece sayfası) ----
@@ -101,7 +103,7 @@ function takvimGuncelle() {
 // ---- ana sayfa kartı: bu gece ----
 function anaKartlar() {
   if (!$('#ayMini')) return;
-  geceOz ??= geceOzeti(new Date(), gozlemci);
+  if (!geceOz) { bosta(() => { geceOz = geceOzeti(new Date(), gozlemci); anaKartlar(); }); return; } // ağır hesap ilk çizimden sonra, boşta
   const { aydinlik, buyuyen, ad } = geceOz.ay, r = 40;
   $('#ayMini').innerHTML = `<circle r="46" class="ay-hale"/><circle r="${r}" class="ay-karanlik"/><path d="${ayYolu(aydinlik, buyuyen, r)}" class="ay-aydinlik"/>`;
   $('#geceKart').textContent = sureYazSa(geceOz.karanlikDk);

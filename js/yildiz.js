@@ -50,7 +50,8 @@ export function yildizlariBaslat(canvas) {
       ctx.beginPath(); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.arc(m.x, m.y, 1.8, 0, 6.2832); ctx.fill();
     }
   }
-  function dongu(ms) { ciz(ms); raf = requestAnimationFrame(dongu); }
+  // 30 kare/sn yeter: yıldızlar yavaş akar; yarı maliyetle telefonda kasmayı önler.
+  function dongu(ms) { raf = requestAnimationFrame(dongu); if (ms - son >= 32) ciz(ms); }
   function baslat() { cancelAnimationFrame(raf); son = performance.now(); if (azalt.matches || document.hidden) ciz(0); else raf = requestAnimationFrame(dongu); }
 
   kur(); baslat();
