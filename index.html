@@ -10,22 +10,31 @@
 <link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/yazi-tipleri.css">
 <link rel="stylesheet" href="css/stil.css">
+<script>document.documentElement.classList.add('js')</script>
 <script type="importmap">{ "imports": { "satellite.js": "./vendor/satellite.js/index.js" } }</script>
 </head>
 <body class="sayfa-ana">
+<div class="aurora" aria-hidden="true"></div>
 <canvas id="yildizlar" aria-hidden="true"></canvas>
 <a class="atla" href="#icerik" data-i="nav.atla">İçeriğe geç</a>
-<header class="ust">
-  <nav class="menu menu-sol" aria-label="Sol gezinme"><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a><a href="gece.html" data-i="nav.gece">Bu gece</a></nav>
-  <h1 class="dag" id="baslik"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi">DAG</a></h1>
-  <nav class="menu menu-sag" aria-label="Sağ gezinme"><a href="iklim.html" data-i="nav.iklim">İklim</a><a href="yontem.html" data-i="nav.yontem">Yöntem</a></nav>
-  <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
+<header class="ust" id="ust">
+  <div class="ust-ic">
+    <nav class="menu menu-sol" aria-label="Sol gezinme"><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a><a href="gece.html" data-i="nav.gece">Bu gece</a></nav>
+    <h1 class="dag" id="baslik"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi">DAG</a></h1>
+    <nav class="menu menu-sag" aria-label="Sağ gezinme"><a href="iklim.html" data-i="nav.iklim">İklim</a><a href="yontem.html" data-i="nav.yontem">Yöntem</a></nav>
+    <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
+  </div>
 </header>
 <main id="icerik">
 
-  <section class="giris" aria-label="Giriş">
+  <section class="hero" aria-label="Giriş">
+    <p class="etiket"><span class="canli" aria-hidden="true"></span><span data-i="hero.etiket">Doğu Anadolu Gözlemevi · Karakayatepe · 3170 m</span></p>
     <p class="slogan" data-i="slogan">Karakayatepe’nin gökyüzü: bu gece ve 2015’ten bugüne</p>
     <p class="lead" data-i="lead">Doğu Anadolu Gözlemevi için canlı uydu geçişleri ve gözlem koşulu analizi.</p>
+    <div class="hero-dugmeler">
+      <a class="dugme" href="gokyuzu.html" data-i="hero.ac">Gökyüzüne bak</a>
+      <a class="dugme ikincil" href="yontem.html" data-i="hero.yontem">Yöntem ve doğrulama</a>
+    </div>
     <figure class="sahne-kap">
       <svg id="sahne" viewBox="0 0 1200 575" role="img" aria-labelledby="sahneBaslik">
   <title id="sahneBaslik" data-i="sahne.baslik">Karlı Karakayatepe zirvesinde, kubbesi açık DAG gözlemevi: çizgi film tarzı illüstrasyon</title>
@@ -167,23 +176,76 @@
 </svg>
       <figcaption data-i="sahne.not">Stilize illüstrasyon: Karakayatepe, 3170 m. Bina biçimi ve ölçüleri gerçeğe uygun değildir.</figcaption>
     </figure>
-    <div class="giris-alt">
-      <p id="sonraki" class="sonraki" aria-live="polite"></p>
-      <a class="dugme" href="gokyuzu.html" data-i="hero.ac">Gökyüzüne bak</a>
-    </div>
   </section>
-  <section class="rehber" aria-label="Sayfalar">
-    <ul>
-      <li><a href="gokyuzu.html"><strong data-i="nav.gokyuzu">Gökyüzü</strong><span data-i="ana.t.gokyuzu"></span></a></li>
-      <li><a href="gece.html"><strong data-i="nav.gece">Bu gece</strong><span data-i="ana.t.gece"></span></a></li>
-      <li><a href="iklim.html"><strong data-i="nav.iklim">İklim</strong><span data-i="ana.t.iklim"></span></a></li>
-      <li><a href="yontem.html"><strong data-i="nav.yontem">Yöntem</strong><span data-i="ana.t.yontem"></span></a></li>
+
+  <section class="kartlar" aria-label="Özet">
+    <ul class="bento">
+      <li class="gor"><a class="kart kart-gecis" href="gokyuzu.html">
+        <div class="kart-et"><span data-i="nav.gokyuzu">Gökyüzü</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="hero.sonraki">Sıradaki görünür geçiş</div>
+        <div id="sonraki" class="kart-deger" aria-live="polite"></div>
+        <div class="kart-not" data-i="ana.t.gokyuzu"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-gece" href="gece.html">
+        <div class="kart-et"><span data-i="nav.gece">Bu gece</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-orta">
+          <svg id="ayMini" class="ay-mini" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+          <div><div id="geceKart" class="kart-deger"></div><div id="geceAlt" class="kart-alt-et"></div></div>
+        </div>
+        <div class="kart-not" data-i="ana.t.gece"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-iklim" href="iklim.html">
+        <div class="kart-et"><span data-i="nav.iklim">İklim</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="k.iklim.et">En açık ay</div>
+        <div id="iklimKart" class="kart-deger"></div>
+        <div class="kart-alt-et" data-i="k.iklim.alt"></div>
+        <div class="kart-not" data-i="ana.t.iklim"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-yontem" href="yontem.html">
+        <div class="kart-et"><span data-i="nav.yontem">Yöntem</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="k.dogr.et">Ölçümle uyum</div>
+        <div class="kart-deger">r <span class="altin">0.86–0.88</span></div>
+        <div class="kart-alt-et" data-i="k.dogr.alt"></div>
+        <div class="kart-not" data-i="ana.t.yontem"></div>
+      </a></li>
     </ul>
+  </section>
+
+  <section class="kanit" aria-labelledby="kanitB">
+    <div class="gor">
+      <p class="eyebrow" data-i="ey.yontem">Şeffaflık</p>
+      <h2 id="kanitB" data-i="kanit.baslik">Sayılara ne kadar güvenilir?</h2>
+      <p class="aciklama" data-i="kanit.aciklama"></p>
+    </div>
+    <ul class="kanit-liste">
+      <li class="panel gor"><p class="kanit-fig" data-i="kanit.1.f"></p><h3 data-i="kanit.1.b"></h3><p data-i="kanit.1"></p></li>
+      <li class="panel gor"><p class="kanit-fig" data-i="kanit.2.f"></p><h3 data-i="kanit.2.b"></h3><p data-i="kanit.2"></p></li>
+      <li class="panel gor"><p class="kanit-fig" data-i="kanit.3.f"></p><h3 data-i="kanit.3.b"></h3><p data-i="kanit.3"></p></li>
+    </ul>
+    <p class="devam gor"><a class="baglanti" href="yontem.html" data-i="ayrinti">Yöntem, eşikler ve sınırlar</a></p>
   </section>
 </main>
 <footer class="alt">
-  <p data-i="alt.not"></p>
-  <p class="soluk" data-i="alt.yapan"></p>
+  <div class="alt-ic">
+    <div class="alt-marka">
+      <p class="alt-dag" aria-hidden="true">DAG</p>
+      <p data-i="alt.not"></p>
+      <p class="soluk" data-i="alt.yapan"></p>
+    </div>
+    <nav class="alt-kol" aria-labelledby="altGezin">
+      <h2 id="altGezin" data-i="alt.gezin">Sayfalar</h2>
+      <ul><li><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a></li><li><a href="gece.html" data-i="nav.gece">Bu gece</a></li><li><a href="iklim.html" data-i="nav.iklim">İklim</a></li><li><a href="yontem.html" data-i="nav.yontem">Yöntem</a></li></ul>
+    </nav>
+    <div class="alt-kol">
+      <h2 data-i="alt.veri">Veri ve kaynaklar</h2>
+      <ul>
+        <li><a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a></li>
+        <li><a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a></li>
+        <li><a href="https://github.com/shashwatak/satellite-js" target="_blank" rel="noopener">satellite.js</a></li>
+        <li><a href="https://github.com/SametDuhan/dag-gokyuzu" target="_blank" rel="noopener" data-i="alt.kod">Kaynak kod (GitHub)</a></li>
+      </ul>
+    </div>
+  </div>
 </footer>
 <script type="module" src="js/ana.js"></script>
 </body>

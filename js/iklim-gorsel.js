@@ -1,7 +1,7 @@
 import { t } from './i18n.js';
 
 const SAATLER = [18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6];
-const DURAK = [[0, [9, 17, 44]], [0.5, [58, 110, 165]], [1, [255, 217, 138]]];
+const DURAK = [[0, [10, 17, 46]], [0.35, [38, 72, 158]], [0.65, [72, 152, 196]], [1, [255, 217, 138]]];
 function renkOranla(v) {
   let i = 0; while (i < DURAK.length - 2 && v > DURAK[i + 1][0]) i++;
   const [a, ca] = DURAK[i], [b, cb] = DURAK[i + 1], k = Math.min(1, Math.max(0, (v - a) / (b - a)));
@@ -36,7 +36,7 @@ export function isiCiz(kap, veri) {
       const oran = Math.round(v * 100), metin = t('iklim.hucre', { ay: t('ay.' + ay), saat: `${String(s).padStart(2, '0')}:00`, oran, u: h.u, g: h.g });
       td.style.background = `rgb(${rgb})`; td.style.color = yazi; td.textContent = oran; td.title = metin; td.setAttribute('aria-label', metin);
     }
-    const tum = tr.insertCell(); tum.className = 'isi-tum'; tum.textContent = `%${Math.round(oranlar[ay] * 100)}`;
+    const tum = tr.insertCell(); tum.className = 'isi-tum'; tum.textContent = t('yuzde', { v: Math.round(oranlar[ay] * 100) });
   }
   kap.replaceChildren(tablo);
 }
@@ -44,8 +44,8 @@ export function isiCiz(kap, veri) {
 export function olcekCiz(kap) {
   kap.replaceChildren();
   const cubuk = document.createElement('span'); cubuk.className = 'olcek-cubuk';
-  cubuk.style.background = `linear-gradient(90deg, rgb(${renkOranla(0)}), rgb(${renkOranla(0.5)}), rgb(${renkOranla(1)}))`;
-  kap.append(Object.assign(document.createElement('span'), { textContent: '%0' }), cubuk, Object.assign(document.createElement('span'), { textContent: '%100' }));
+  cubuk.style.background = `linear-gradient(90deg, rgb(${renkOranla(0)}), rgb(${renkOranla(0.35)}), rgb(${renkOranla(0.65)}), rgb(${renkOranla(1)}))`;
+  kap.append(Object.assign(document.createElement('span'), { textContent: t('yuzde', { v: 0 }) }), cubuk, Object.assign(document.createElement('span'), { textContent: t('yuzde', { v: 100 }) }));
 }
 
 // Model ile ölçümün aylık gece "açık" payı
@@ -61,4 +61,13 @@ export function karsilastirmaCiz(kap, veri) {
   olcum.forEach((v, i) => { s += `<circle cx="${x(i)}" cy="${y(v)}" r="3.2" class="nokta-olcum"/>`; });
   model.forEach((v, i) => { s += `<circle cx="${x(i)}" cy="${y(v)}" r="2.6" class="nokta-model"/>`; });
   kap.innerHTML = s + '</svg>';
+}
+
+// Üstteki özet kartları: en açık ay, en kapalı ay, genel oran (tüm ay×saat hücreleri değil, aylık toplamlardan).
+export function ozetKartlariCiz(kap, veri) {
+  const { en, az, enV, azV } = enIyiEnKotu(veri);
+  const u = veri.aylik.reduce((a, m) => a + m.u, 0), g = veri.aylik.reduce((a, m) => a + m.g, 0), genel = Math.round((u / g) * 100);
+  const kart = (et, deger, alt, sinif = '') => `<li class="stat ${sinif}"><span class="stat-et">${et}</span><strong class="stat-deger">${deger}</strong><span class="stat-alt">${alt}</span></li>`;
+  kap.innerHTML = kart(t('ik.en'), t('yuzde', { v: enV }), t('ay.' + en), 'stat-altin') + kart(t('ik.az'), t('yuzde', { v: azV }), t('ay.' + az)) +
+    kart(t('ik.genel'), t('yuzde', { v: genel }), t('ik.ham')) + kart(t('k.dogr.et'), 'r 0.86–0.88', t('k.dogr.alt'), 'stat-mavi');
 }

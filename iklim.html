@@ -10,35 +10,67 @@
 <link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/yazi-tipleri.css">
 <link rel="stylesheet" href="css/stil.css">
+<script>document.documentElement.classList.add('js')</script>
 <script type="importmap">{ "imports": { "satellite.js": "./vendor/satellite.js/index.js" } }</script>
 </head>
 <body class="sayfa-iklim">
+<div class="aurora" aria-hidden="true"></div>
 <canvas id="yildizlar" aria-hidden="true"></canvas>
 <a class="atla" href="#icerik" data-i="nav.atla">İçeriğe geç</a>
-<header class="ust">
-  <nav class="menu menu-sol" aria-label="Sol gezinme"><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a><a href="gece.html" data-i="nav.gece">Bu gece</a></nav>
-  <div class="dag"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi, ana sayfa">DAG</a></div>
-  <nav class="menu menu-sag" aria-label="Sağ gezinme"><a href="iklim.html" data-i="nav.iklim" aria-current="page">İklim</a><a href="yontem.html" data-i="nav.yontem">Yöntem</a></nav>
-  <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
+<header class="ust kompakt" id="ust">
+  <div class="ust-ic">
+    <nav class="menu menu-sol" aria-label="Sol gezinme"><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a><a href="gece.html" data-i="nav.gece">Bu gece</a></nav>
+    <div class="dag"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi, ana sayfa">DAG</a></div>
+    <nav class="menu menu-sag" aria-label="Sağ gezinme"><a href="iklim.html" data-i="nav.iklim" aria-current="page">İklim</a><a href="yontem.html" data-i="nav.yontem">Yöntem</a></nav>
+    <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
+  </div>
 </header>
 <main id="icerik">
 
-  <section class="bolum ilk" aria-labelledby="iklimBaslik">
-    <h1 id="iklimBaslik" class="sayfa-baslik" data-i="iklim.baslik">Yılın hangi saati açık? DAG, 2015’ten bugüne</h1>
-    <p id="iklimOzet" class="ozet"></p>
-    <div class="isi-kap"><div id="isi"></div></div>
-    <div class="olcek"><span class="olcek-ad" data-i="iklim.olcek">uygun oranı</span><div id="olcek" class="olcek-ic"></div></div>
-    <p class="aciklama" data-i="iklim.sinir"></p>
-    <h2 data-i="olcum.baslik">Ölçümle karşılaştırma</h2>
-    <p class="aciklama" data-i="olcum.aciklama"></p>
-    <div class="grafik"><div id="karsilastirma"></div>
-      <ul class="grafik-anahtar"><li class="a-olcum" data-i="olcum.olcum">Ölçüm</li><li class="a-model" data-i="olcum.model">Model</li></ul></div>
-    <p class="devam"><a href="yontem.html" data-i="ayrinti">Yöntem, eşikler ve sınırlar</a></p>
+  <section class="bolum" aria-labelledby="iklimBaslik">
+    <div class="sayfa-ust gor">
+      <p class="eyebrow" data-i="ey.iklim">2015 – bugün</p>
+      <h1 id="iklimBaslik" class="sayfa-baslik" data-i="iklim.baslik">Yılın hangi saati açık? DAG, 2015’ten bugüne</h1>
+      <p id="iklimOzet" class="ozet"></p>
+    </div>
+    <ul id="iklimStat" class="stats gor"></ul>
+    <div class="panel gor">
+      <div class="isi-kap"><div id="isi"></div></div>
+      <div class="olcek"><span class="olcek-ad" data-i="iklim.olcek">uygun oranı</span><div id="olcek" class="olcek-ic"></div></div>
+      <p class="not" data-i="iklim.sinir"></p>
+    </div>
+    <div class="panel olcum-panel gor">
+      <div class="olcum-metin">
+        <h2 data-i="olcum.baslik">Ölçümle karşılaştırma</h2>
+        <p class="aciklama" data-i="olcum.aciklama"></p>
+        <p class="devam"><a class="baglanti" href="yontem.html" data-i="ayrinti">Yöntem, eşikler ve sınırlar</a></p>
+      </div>
+      <div class="grafik"><div id="karsilastirma"></div>
+        <ul class="grafik-anahtar"><li class="a-olcum" data-i="olcum.olcum">Ölçüm</li><li class="a-model" data-i="olcum.model">Model</li></ul></div>
+    </div>
   </section>
 </main>
 <footer class="alt">
-  <p data-i="alt.not"></p>
-  <p class="soluk" data-i="alt.yapan"></p>
+  <div class="alt-ic">
+    <div class="alt-marka">
+      <p class="alt-dag" aria-hidden="true">DAG</p>
+      <p data-i="alt.not"></p>
+      <p class="soluk" data-i="alt.yapan"></p>
+    </div>
+    <nav class="alt-kol" aria-labelledby="altGezin">
+      <h2 id="altGezin" data-i="alt.gezin">Sayfalar</h2>
+      <ul><li><a href="gokyuzu.html" data-i="nav.gokyuzu">Gökyüzü</a></li><li><a href="gece.html" data-i="nav.gece">Bu gece</a></li><li><a href="iklim.html" data-i="nav.iklim">İklim</a></li><li><a href="yontem.html" data-i="nav.yontem">Yöntem</a></li></ul>
+    </nav>
+    <div class="alt-kol">
+      <h2 data-i="alt.veri">Veri ve kaynaklar</h2>
+      <ul>
+        <li><a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a></li>
+        <li><a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a></li>
+        <li><a href="https://github.com/shashwatak/satellite-js" target="_blank" rel="noopener">satellite.js</a></li>
+        <li><a href="https://github.com/SametDuhan/dag-gokyuzu" target="_blank" rel="noopener" data-i="alt.kod">Kaynak kod (GitHub)</a></li>
+      </ul>
+    </div>
+  </div>
 </footer>
 <script type="module" src="js/ana.js"></script>
 </body>

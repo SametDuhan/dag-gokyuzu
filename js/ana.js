@@ -3,10 +3,11 @@ import { t, dilKur, ilkDil, getDil } from './i18n.js';
 import { yildizlariBaslat } from './yildiz.js';
 import { tleYukle, gecisleriHesapla, gozlemci } from './gecisler.js';
 import { geceOzeti } from '../src/gece.js';
-import { ozetYaz, ayKartCiz, cizelgeCiz, olaylarCiz } from './ay-gorsel.js';
+import { ozetYaz, ayKartCiz, cizelgeCiz, olaylarCiz, ayYolu, sureYazSa } from './ay-gorsel.js';
 import { gokyuzuKur } from './gokyuzu.js';
 import { havaYukle, saatleriHazirla, seritCiz, esikleriCiz } from './hava.js';
-import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu } from './iklim-gorsel.js';
+import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu, ozetKartlariCiz } from './iklim-gorsel.js';
+import { efektleriKur } from './efekt.js';
 import { saatYaz, yonYaz, sureYaz, TZ } from './yardimci.js';
 
 const $ = (s) => document.querySelector(s);
@@ -15,6 +16,7 @@ const harita = $('#gokHarita') ? gokyuzuKur($('#gokHarita')) : null;
 const cubuk = $('#zaman');
 
 yildizlariBaslat($('#yildizlar'));
+efektleriKur();
 if (matchMedia('(prefers-reduced-motion: reduce)').matches) $('#sahne')?.pauseAnimations?.();
 
 // ---- dil ----
@@ -55,9 +57,10 @@ function sec(g, kaydir) {
 function sonrakiCiz() {
   const kap = $('#sonraki'); if (!kap) return;
   const g = durum.gecisler[0];
-  if (!durum.hazir) { kap.textContent = t('harita.yukleniyor'); return; }
+  if (!durum.hazir) { kap.textContent = t('harita.yukleniyor'); kap.classList.add('bekle'); return; }
+  kap.classList.remove('bekle');
   if (!g) { kap.textContent = t('hero.yok'); return; }
-  kap.innerHTML = `<span class="s-et">${t('hero.sonraki')}</span><strong>${g.ad.replace(/\s*\(.*$/, '')}</strong> <span class="s-d">${saatYaz(g.dogus)} · ${t('hero.zirve')} ${Math.round(g.zirveYukseklik)}° · ${yonYaz(g.dogusAzimut)} → ${yonYaz(g.batisAzimut)}</span>`;
+  kap.innerHTML = `<strong>${g.ad.replace(/\s*\(.*$/, '')}</strong><span class="s-d">${saatYaz(g.dogus)} · ${t('hero.zirve')} ${Math.round(g.zirveYukseklik)}° · ${yonYaz(g.dogusAzimut)} → ${yonYaz(g.batisAzimut)}</span>`;
 }
 function kaynakYazi() {
   const el = $('#kaynak'); if (!el) return; if (!durum.tle) { el.textContent = ''; return; }
@@ -72,6 +75,17 @@ function geceCiz() {
   if (!$('#ayKart')) return;
   geceOz ??= geceOzeti(new Date(), gozlemci);
   ozetYaz($('#geceOzet'), geceOz); ayKartCiz($('#ayKart'), geceOz); cizelgeCiz($('#geceCizelge'), geceOz); olaylarCiz($('#olayListe'), geceOz);
+}
+
+// ---- ana sayfa kartı: bu gece ----
+function anaKartlar() {
+  if (!$('#ayMini')) return;
+  geceOz ??= geceOzeti(new Date(), gozlemci);
+  const { aydinlik, buyuyen, ad } = geceOz.ay, r = 40;
+  $('#ayMini').innerHTML = `<circle r="46" class="ay-hale"/><circle r="${r}" class="ay-karanlik"/><path d="${ayYolu(aydinlik, buyuyen, r)}" class="ay-aydinlik"/>`;
+  $('#geceKart').textContent = sureYazSa(geceOz.karanlikDk);
+  const aysiz = geceOz.aysizDk > 0 ? t('k.aysiz', { sure: sureYazSa(geceOz.aysizDk) }) : t('k.aysizYok');
+  $('#geceAlt').innerHTML = `${t('k.gece.sure')}<br>${aysiz} · ${t('ay.evre.' + ad)}, ${t('ay.yuzde', { v: Math.round(aydinlik * 100) })}`;
 }
 
 if ($('#geceCizelge')) {
@@ -92,18 +106,20 @@ function havaCiz() {
 
 // ---- iklim sayfası ----
 function iklimCiz() {
-  const v = durum.iklim; if (!v || !$('#isi')) return;
+  const v = durum.iklim; if (!v) return;
   const { en, az, enV, azV } = enIyiEnKotu(v);
+  if ($('#iklimKart')) $('#iklimKart').innerHTML = `${t('ay.' + en)} <span class="altin">${t('yuzde', { v: enV })}</span>`;
+  if (!$('#isi')) return;
   $('#iklimOzet').textContent = t('iklim.ozet', { en: t('ay.' + en), az: t('ay.' + az), enV, azV });
-  isiCiz($('#isi'), v); olcekCiz($('#olcek')); karsilastirmaCiz($('#karsilastirma'), v);
+  ozetKartlariCiz($('#iklimStat'), v); isiCiz($('#isi'), v); olcekCiz($('#olcek')); karsilastirmaCiz($('#karsilastirma'), v);
 }
 
-document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); havaCiz(); iklimCiz(); });
+document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); anaKartlar(); havaCiz(); iklimCiz(); });
 dilKur(ilkDil());
 
 // ---- veri akışı: yalnız ilgili sayfada ----
 (async () => {
-  if ($('#isi')) iklimYukle().then((v) => { durum.iklim = v; iklimCiz(); }).catch(() => {});
+  if ($('#isi') || $('#iklimKart')) iklimYukle().then((v) => { durum.iklim = v; iklimCiz(); }).catch(() => {});
   if ($('#havaSerit')) { havaCiz(); havaYukle().then((h) => { durum.hava = h; havaCiz(); }).catch(() => { durum.hava = 'yok'; havaCiz(); }); }
   if (!harita && !$('#sonraki')) return;
   sonrakiCiz();
