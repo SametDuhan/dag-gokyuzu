@@ -1,24 +1,16 @@
 // Sayfaları üretir: index, gokyuzu, gece, iklim, yontem (.html). Çalıştır: node araclar/sayfalari-uret.mjs
-// Ortak üst çubuk/alt bilgi tek yerde. Giriş sayfası tek ekran: girdap arka planı, ortada DAG, dört köşede sekmeler.
+// Ortak üst çubuk/alt bilgi tek yerde; çizim araclar/parcalar/sahne.html (araclar/sahne_uret.py üretir).
 import { readFileSync, writeFileSync } from 'node:fs';
 const kok = new URL('../', import.meta.url);
+const sahne = readFileSync(new URL('araclar/parcalar/sahne.html', kok), 'utf8');
 const FAV = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302040a'/%3E%3Cpath d='M16 4l2.4 9.6L28 16l-9.6 2.4L16 28l-2.4-9.6L4 16l9.6-2.4z' fill='%23f4c56a'/%3E%3C/svg%3E";
 
 const SEKME = { gokyuzu: ['gokyuzu.html', 'nav.gokyuzu', 'Gökyüzü'], gece: ['gece.html', 'nav.gece', 'Bu gece'], iklim: ['iklim.html', 'nav.iklim', 'İklim'], yontem: ['yontem.html', 'nav.yontem', 'Yöntem'] };
 const sekme = (k, aktif) => `<a href="${SEKME[k][0]}" data-i="${SEKME[k][1]}"${aktif === k ? ' aria-current="page"' : ''}>${SEKME[k][2]}</a>`;
 
+const ANA_DAG = '<h1 class="dag" id="baslik"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi">DAG</a></h1>';
 const IC_DAG = '<div class="dag"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi, ana sayfa">DAG</a></div>';
 const DIS = 'target="_blank" rel="noopener"';
-
-// Giriş sayfası: tek ekran, kaydırma yok. Gövde diğer sayfalardan farklı (üst çubuk, alt bilgi, yıldız tuvali yok).
-const KOSE = [['gokyuzu', 'ul'], ['gece', 'ur'], ['iklim', 'bl'], ['yontem', 'br']];
-const anaGovde = `<canvas id="girdap" aria-hidden="true"></canvas>
-<div class="girdap-isik" aria-hidden="true"></div>
-<nav class="koseler" aria-label="Gezinme">${KOSE.map(([k, yer]) => `<a class="kose kose-${yer}" href="${SEKME[k][0]}" data-i="${SEKME[k][1]}">${SEKME[k][2]}</a>`).join('')}</nav>
-<main id="icerik">
-  <h1 class="dag" id="baslik"><a href="./" aria-label="DAG, Doğu Anadolu Gözlemevi">DAG</a></h1>
-</main>
-<button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>`;
 
 function sayfa({ dosya, baslik, aciklama, aktif, govde, betik = 'js/ana.js', anaSayfa = false }) {
   const html = `<!doctype html>
@@ -37,13 +29,13 @@ function sayfa({ dosya, baslik, aciklama, aktif, govde, betik = 'js/ana.js', ana
 <script type="importmap">{ "imports": { "satellite.js": "./vendor/satellite.js/index.js" } }</script>
 </head>
 <body class="sayfa-${dosya.replace('.html', '').replace('index', 'ana')}">
-${anaSayfa ? anaGovde : `<div class="aurora" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"></div>
 <canvas id="yildizlar" aria-hidden="true"></canvas>
 <a class="atla" href="#icerik" data-i="nav.atla">İçeriğe geç</a>
-<header class="ust kompakt" id="ust">
+<header class="ust${anaSayfa ? '' : ' kompakt'}" id="ust">
   <div class="ust-ic">
     <nav class="menu menu-sol" aria-label="Sol gezinme">${sekme('gokyuzu', aktif)}${sekme('gece', aktif)}</nav>
-    ${IC_DAG}
+    ${anaSayfa ? ANA_DAG : IC_DAG}
     <nav class="menu menu-sag" aria-label="Sağ gezinme">${sekme('iklim', aktif)}${sekme('yontem', aktif)}</nav>
     <button type="button" id="dilDugme" class="dil" aria-label="Switch to English">EN</button>
   </div>
@@ -72,7 +64,7 @@ ${govde}
       </ul>
     </div>
   </div>
-</footer>`}
+</footer>
 <script type="module" src="${betik}"></script>
 </body>
 </html>
@@ -88,7 +80,75 @@ const sayfaUst = (eyKey, eyTr, id, bKey, bTr, ek = '') =>
 ${ek}
     </div>`;
 
-sayfa({ dosya: 'index.html', baslik: 'DAG Gökyüzü', aciklama: 'Doğu Anadolu Gözlemevi (DAG) için canlı uydu geçişleri ve gözlem koşulu analizi.', anaSayfa: true });
+sayfa({ dosya: 'index.html', baslik: 'DAG Gökyüzü', aciklama: 'Doğu Anadolu Gözlemevi (DAG) için canlı uydu geçişleri ve gözlem koşulu analizi.', anaSayfa: true, govde: `
+  <section class="hero" aria-label="Giriş">
+    <p class="etiket"><span class="canli" aria-hidden="true"></span><span data-i="hero.etiket">Doğu Anadolu Gözlemevi · Karakayatepe · 3170 m</span></p>
+    <p class="slogan" data-i="slogan">Karakayatepe’nin gökyüzü: bu gece ve 2015’ten bugüne</p>
+    <p class="lead" data-i="lead">Doğu Anadolu Gözlemevi için canlı uydu geçişleri ve gözlem koşulu analizi.</p>
+    <div class="hero-dugmeler">
+      <a class="dugme" href="gokyuzu.html" data-i="hero.ac">Gökyüzüne bak</a>
+      <a class="dugme ikincil" href="yontem.html" data-i="hero.yontem">Yöntem ve doğrulama</a>
+    </div>
+    <figure class="sahne-kap">
+      ${sahne}
+      <figcaption data-i="sahne.not">Stilize illüstrasyon: Karakayatepe, 3170 m. Bina biçimi ve ölçüleri gerçeğe uygun değildir.</figcaption>
+    </figure>
+  </section>
+
+  <section class="kartlar" aria-label="Özet">
+    <ul class="bento">
+      <li class="gor"><a class="kart kart-gecis" href="gokyuzu.html">
+        <div class="kart-et"><span data-i="nav.gokyuzu">Gökyüzü</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="hero.sonraki">Sıradaki görünür geçiş</div>
+        <div id="sonraki" class="kart-deger" aria-live="polite"></div>
+        <div class="kart-not" data-i="ana.t.gokyuzu"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-gece" href="gece.html">
+        <div class="kart-et"><span data-i="nav.gece">Bu gece</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-orta">
+          <svg id="ayMini" class="ay-mini" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+          <div><div id="geceKart" class="kart-deger"></div><div id="geceAlt" class="kart-alt-et"></div></div>
+        </div>
+        <div class="kart-not" data-i="ana.t.gece"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-iklim" href="iklim.html">
+        <div class="kart-et"><span data-i="nav.iklim">İklim</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="k.iklim.et">En açık ay</div>
+        <div id="iklimKart" class="kart-deger"></div>
+        <div class="kart-alt-et" data-i="k.iklim.alt"></div>
+        <div class="kart-not" data-i="ana.t.iklim"></div>
+      </a></li>
+      <li class="gor"><a class="kart kart-yontem" href="yontem.html">
+        <div class="kart-et"><span data-i="nav.yontem">Yöntem</span><i class="ok" aria-hidden="true">→</i></div>
+        <div class="kart-alt-et" data-i="k.dogr.et">Ölçümle uyum</div>
+        <div class="kart-deger">r <span class="altin">0.86–0.88</span></div>
+        <div class="kart-alt-et" data-i="k.dogr.alt"></div>
+        <div class="kart-not" data-i="ana.t.yontem"></div>
+      </a></li>
+    </ul>
+  </section>
+
+  <section class="kanit" aria-labelledby="kanitB">
+    <div class="gor">
+      <p class="eyebrow" data-i="ey.yontem">Şeffaflık</p>
+      <h2 id="kanitB" data-i="kanit.baslik">Sayılara ne kadar güvenilir?</h2>
+      <p class="aciklama" data-i="kanit.aciklama"></p>
+    </div>
+    <ul class="kanit-liste">
+      ${[1, 2, 3].map((n) => `<li class="panel gor"><p class="kanit-fig" data-i="kanit.${n}.f"></p><h3 data-i="kanit.${n}.b"></h3><p data-i="kanit.${n}"></p></li>`).join('\n      ')}
+    </ul>
+    <p class="devam gor"><a class="baglanti" href="yontem.html" data-i="ayrinti">Yöntem, eşikler ve sınırlar</a></p>
+  </section>
+
+  <section class="alanlar" aria-labelledby="alanB">
+    <div class="gor">
+      <h2 id="alanB" data-i="alan.baslik">Duyurudaki alanlar ve bu sitenin onlarda yaptığı</h2>
+      <p class="aciklama" data-i="alan.aciklama"></p>
+    </div>
+    <ul class="alan-liste">
+      ${[['1', 'gokyuzu.html'], ['2', 'gece.html'], ['3', 'iklim.html'], ['4', 'yontem.html'], ['5', 'gece.html'], ['6', 'gece.html']].map(([n, h]) => `<li class="gor"><a href="${h}"><span class="alan-no" aria-hidden="true">0${n}</span><strong data-i="alan.${n}.b"></strong><span data-i="alan.${n}"></span></a></li>`).join('\n      ')}
+    </ul>
+  </section>` });
 
 sayfa({ dosya: 'gokyuzu.html', baslik: 'Gökyüzü · DAG Gökyüzü', aciklama: 'DAG’dan görünen gökyüzü ve önümüzdeki 24 saatin parlak uydu geçişleri.', aktif: 'gokyuzu', govde: `
   <section class="bolum" aria-labelledby="gokBaslik">

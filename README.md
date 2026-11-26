@@ -21,6 +21,7 @@ npm install && npm test       # Node testleri (hesap çekirdeği)
 ```
 
 - Sayfalar `node araclar/sayfalari-uret.mjs` ile üretilir; HTML dosyalarını elle düzenleme.
+- Giriş çizimi `python3 araclar/sahne_uret.py` ile üretilir.
 - Arşiv verisi: `node araclar/arsiv-cek.mjs` → `data/arsiv/`; özet: `node araclar/iklim-json.mjs` → `data/iklim.json`.
 - Tarayıcı satellite.js'i `vendor/satellite.js/` klasöründen yükler (sürüm 7.2.0, MIT). Güncellemek için: `npm install` sonra `npm run vendor`.
 

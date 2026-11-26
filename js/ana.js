@@ -1,10 +1,9 @@
 // Her sayfa bu betiği yükler; yalnız o sayfada bulunan öğeler için çalışır.
 import { t, dilKur, ilkDil, getDil } from './i18n.js';
 import { yildizlariBaslat } from './yildiz.js';
-import { girdapBaslat } from './girdap.js';
 import { tleYukle, gecisleriHesapla, gozlemci } from './gecisler.js';
 import { geceOzeti } from '../src/gece.js';
-import { ozetYaz, ayKartCiz, cizelgeCiz, olaylarCiz } from './ay-gorsel.js';
+import { ozetYaz, ayKartCiz, cizelgeCiz, olaylarCiz, ayYolu, sureYazSa } from './ay-gorsel.js';
 import { gokyuzuKur } from './gokyuzu.js';
 import { havaYukle, saatleriHazirla, seritCiz, esikleriCiz } from './hava.js';
 import { iklimYukle, isiCiz, olcekCiz, karsilastirmaCiz, enIyiEnKotu, ozetKartlariCiz } from './iklim-gorsel.js';
@@ -22,8 +21,9 @@ const durum = { baslangic: new Date(), gecisler: [], sats: [], secili: null, tle
 const harita = $('#gokHarita') ? gokyuzuKur($('#gokHarita')) : null;
 const cubuk = $('#zaman');
 
-if ($('#girdap')) girdapBaslat($('#girdap')); else yildizlariBaslat($('#yildizlar'));
+yildizlariBaslat($('#yildizlar'));
 efektleriKur();
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) $('#sahne')?.pauseAnimations?.();
 
 // ---- dil ----
 function dilDugmesi() {
@@ -60,6 +60,14 @@ function sec(g, kaydir) {
   cubuk.value = dk; harita.guncelle({ secili: g }); zamanGuncelle();
   if (kaydir && innerWidth < 992) $('#kubbe').scrollIntoView({ behavior: 'auto', block: 'center' });
 }
+function sonrakiCiz() {
+  const kap = $('#sonraki'); if (!kap) return;
+  const g = durum.gecisler[0];
+  if (!durum.hazir) { kap.textContent = t('harita.yukleniyor'); kap.classList.add('bekle'); return; }
+  kap.classList.remove('bekle');
+  if (!g) { kap.textContent = t('hero.yok'); return; }
+  kap.innerHTML = `<strong>${g.ad.replace(/\s*\(.*$/, '')}</strong><span class="s-d">${saatYaz(g.dogus)} · ${t('hero.zirve')} ${Math.round(g.zirveYukseklik)}° · ${yonYaz(g.dogusAzimut)} → ${yonYaz(g.batisAzimut)}</span>`;
+}
 function kaynakYazi() {
   const el = $('#kaynak'); if (!el) return; if (!durum.tle) { el.textContent = ''; return; }
   const { tur, tarih } = durum.tle;
@@ -92,6 +100,17 @@ function takvimGuncelle() {
   takvimCiz(takvimListe, $('#takvim'), $('#takvimOzet'));
 }
 
+// ---- ana sayfa kartı: bu gece ----
+function anaKartlar() {
+  if (!$('#ayMini')) return;
+  if (!geceOz) { bosta(() => { geceOz = geceOzeti(new Date(), gozlemci); anaKartlar(); }); return; } // ağır hesap ilk çizimden sonra, boşta
+  const { aydinlik, buyuyen, ad } = geceOz.ay, r = 40;
+  $('#ayMini').innerHTML = `<circle r="46" class="ay-hale"/><circle r="${r}" class="ay-karanlik"/><path d="${ayYolu(aydinlik, buyuyen, r)}" class="ay-aydinlik"/>`;
+  $('#geceKart').textContent = sureYazSa(geceOz.karanlikDk);
+  const aysiz = geceOz.aysizDk > 0 ? t('k.aysiz', { sure: sureYazSa(geceOz.aysizDk) }) : t('k.aysizYok');
+  $('#geceAlt').innerHTML = `${t('k.gece.sure')}<br>${aysiz} · ${t('ay.evre.' + ad)}, ${t('ay.yuzde', { v: Math.round(aydinlik * 100) })}`;
+}
+
 if ($('#geceCizelge')) {
   let sonGenislik = 0;
   new ResizeObserver(([g]) => { const w = Math.round(g.contentRect.width); if (geceOz && Math.abs(w - sonGenislik) > 8) { sonGenislik = w; cizelgeCiz($('#geceCizelge'), geceOz); } }).observe($('#geceCizelge'));
@@ -112,6 +131,7 @@ function havaCiz() {
 function iklimCiz() {
   const v = durum.iklim; if (!v) return;
   const { en, az, enV, azV } = enIyiEnKotu(v);
+  if ($('#iklimKart')) $('#iklimKart').innerHTML = `${t('ay.' + en)} <span class="altin">${t('yuzde', { v: enV })}</span>`;
   if (!$('#isi')) return;
   $('#iklimOzet').textContent = t('iklim.ozet', { en: t('ay.' + en), az: t('ay.' + az), enV, azV });
   ozetKartlariCiz($('#iklimStat'), v); isiCiz($('#isi'), v); olcekCiz($('#olcek')); karsilastirmaCiz($('#karsilastirma'), v);
@@ -123,19 +143,20 @@ function yerleskeCiz() {
   yerleskeGrafikCiz($('#yerleskeGrafik'), v); yerleskeTabloCiz($('#yerleskeTablo'), v);
 }
 
-document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); havaCiz(); iklimCiz(); yerleskeCiz(); kosulKutuCiz(); });
+document.addEventListener('dilDegisti', () => { dilDugmesi(); listeCiz(); sonrakiCiz(); kaynakYazi(); zamanGuncelle(); geceCiz(); anaKartlar(); havaCiz(); iklimCiz(); yerleskeCiz(); kosulKutuCiz(); });
 dilKur(ilkDil());
 
 // ---- veri akışı: yalnız ilgili sayfada ----
 (async () => {
-  if ($('#isi')) iklimYukle().then((v) => { durum.iklim = v; iklimCiz(); }).catch(() => {});
+  if ($('#isi') || $('#iklimKart')) iklimYukle().then((v) => { durum.iklim = v; iklimCiz(); }).catch(() => {});
   if ($('#resmiTablo')) yerleskeYukle().then((v) => { durum.yerleske = v; yerleskeCiz(); }).catch(() => {});
   if ($('#havaSerit')) { havaCiz(); havaYukle().then((h) => { durum.hava = h; havaCiz(); }).catch(() => { durum.hava = 'yok'; havaCiz(); }); }
   if ($('#kosulKutular')) {
     kpYukle().then((k) => { durum.kp = k; kosulKutuCiz(); }).catch(() => { durum.kp = 'yok'; kosulKutuCiz(); });
     kosulYukle().then((v) => { durum.kosul = v; kosulKutuCiz(); }).catch(() => { durum.kosul = 'yok'; kosulKutuCiz(); });
   }
-  if (!harita) return;
+  if (!harita && !$('#sonraki')) return;
+  sonrakiCiz();
   const tle = await tleYukle(); durum.tle = tle; durum.sats = tle.sats; kaynakYazi();
   harita?.guncelle({ sats: tle.sats });
   const bit = new Date(durum.baslangic.getTime() + 24 * 3600e3);
@@ -143,5 +164,5 @@ dilKur(ilkDil());
   durum.hazir = true;
   harita?.guncelle({ gecisler: durum.gecisler });
   durum.secili = durum.gecisler[0] ?? null; harita?.guncelle({ secili: durum.secili });
-  listeCiz(); zamanGuncelle();
+  listeCiz(); sonrakiCiz(); zamanGuncelle();
 })();
